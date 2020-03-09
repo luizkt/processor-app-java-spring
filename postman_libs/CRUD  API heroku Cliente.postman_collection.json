@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "e3f3ff5e-9cd8-4077-8dde-b7d73544c015",
+		"name": "CRUD  API heroku Cliente",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "GET - Busca Cliente RG",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/cliente/cpf/12",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"cliente",
+								"cpf",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Busca Cliente Nome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/cliente/nome/Luiz",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"cliente",
+								"nome",
+								"Luiz"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Busca Todos Clientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/cliente/all",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"cliente",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Adiciona Cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"cpf\": \"12\",\n\t\"nome\": \"Luiz\",\n\t\"sobrenome\": \"Tabacow\",\n\t\"email\": \"email@google.com\",\n\t\"data_nascimento\": \"22/10/1993\",\n\t\"endereco\": {\n\t\t\"rua\": \"Avenida do Estado\",\n\t\t\"bairro\": \"Cambuci\",\n\t\t\"numero\": \"1000\",\n\t\t\"cidade\": \"São Paulo\",\n\t\t\"estado\": \"SP\",\n\t\t\"cep\": \"12345001\",\n\t\t\"pais\": \"Brasil\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{url.api}}/cliente/add",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"cliente",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH - Atualiza Cliente",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nome\": \"Luiz\",\n\t\"sobrenome\": \"Tabacow\",\n\t\"email\": \"email@google\",\n\t\"data_nascimento\": \"22/10/1993\",\n\t\"endereco\": {\n\t\t\"rua\": \"Avenida do Estado\",\n\t\t\"bairro\": \"Cambuci\",\n\t\t\"numero\": \"1000\",\n\t\t\"cidade\": \"São Paulo\",\n\t\t\"estado\": \"SP\",\n\t\t\"cep\": \"12345001\",\n\t\t\"pais\": \"Brasil\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{url.api}}/cliente/update/12",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"cliente",
+								"update",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Exclui usuário por CPF",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/cliente/delete/12",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"cliente",
+								"delete",
+								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "1b2028b8-7f1a-4810-b665-12e490903e68",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "a657134c-bb58-49cc-9235-add9cffb1862",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
