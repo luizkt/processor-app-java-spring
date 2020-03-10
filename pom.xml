@@ -8,11 +8,11 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.1.6.RELEASE</version>
 	</parent>
-	<groupId>br.com.fiap.jpa</groupId>
-	<artifactId>crud-mysql-cliente</artifactId>
+	<groupId>br.com.fiap.springframework</groupId>
+	<artifactId>processor-app</artifactId>
 	<version>1.0.0</version>
-	<name>crud-mysql-cliente</name>
-	<description>Projeto de uma API de CRUD básico</description>
+	<name>processor-app</name>
+	<description>Gerenciador de cadastro de clientes e transações</description>
 
 	<dependencies>
 		<dependency>

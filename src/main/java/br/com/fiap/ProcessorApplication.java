@@ -14,10 +14,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = { "br.com.fiap.repository" })
 @EntityScan(basePackages = "br.com.fiap.entity")
 @ComponentScan(basePackages = { "br.com.fiap" })
-public class CrudApplication {
+public class ProcessorApplication {
 
 	public static void main(String[] args) {
 
-		SpringApplication.run(CrudApplication.class, args);
+		SpringApplication.run(ProcessorApplication.class, args);
 	}
 }

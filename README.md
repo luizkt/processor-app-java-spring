@@ -1,6 +1,6 @@
-# crud-mysql-heroku-cliente
+# processor-app
 
-Projeto de uma API de CRUD básico hospedado no heroku.
+Gerenciador de cadastro de clientes e transações
 
 ## Execução local
 
