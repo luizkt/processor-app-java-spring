@@ -3,7 +3,7 @@ version: '2'
 # Define services
 services:
   # App backend service
-  app-server:
+  processor-app-server:
     # Configuration for building the docker image for the backend service
     build:
       context: '' # Use an image built from the specified dockerfile in the `projeto-spring-framework-2020` directory.
