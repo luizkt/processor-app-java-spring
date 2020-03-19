@@ -1,0 +1,175 @@
+{
+	"info": {
+		"_postman_id": "c24052db-e739-4007-a5fc-afe5f7d8fe16",
+		"name": "Projeto Spring FIAP 2020",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Alunos",
+			"item": [
+				{
+					"name": "GET - Busca Aluno Matricula",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/aluno/matricula/12",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"aluno",
+								"matricula",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Busca Aluno Nome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/aluno/nome/Luiz",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"aluno",
+								"nome",
+								"Luiz"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Busca Todos Alunos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/aluno/all",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"aluno",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Adiciona Aluno",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"matricula\": \"12\",\n\t\"nome\": \"Luiz\"\n}"
+						},
+						"url": {
+							"raw": "{{url.api}}/aluno/add",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"aluno",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST - Adiciona Alunos CSV",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url.api}}/aluno/load_from_csv",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"aluno",
+								"load_from_csv"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH - Atualiza Aluno",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nome\": \"Luiz\"\n}"
+						},
+						"url": {
+							"raw": "{{url.api}}/aluno/update/12",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"aluno",
+								"update",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Exclui aluno por matricula",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/aluno/delete/12",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"aluno",
+								"delete",
+								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
