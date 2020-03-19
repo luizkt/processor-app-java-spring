@@ -8,12 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "br.com.fiap")
 @Configuration
 @PropertySource("application.properties")
 @EnableJpaRepositories(basePackages = { "br.com.fiap.repository" })
 @EntityScan(basePackages = "br.com.fiap.entity")
-@ComponentScan(basePackages = { "br.com.fiap" })
 public class ProcessorApplication {
 
 	public static void main(String[] args) {
