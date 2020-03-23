@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="STUDENT", uniqueConstraints = {@UniqueConstraint(columnNames = "STUDENT_REGISTRATION_NUMBER")})
-public class Student implements Serializable{
+@Table(name = "STUDENT", uniqueConstraints = {@UniqueConstraint(columnNames = "STUDENT_REGISTRATION_NUMBER")})
+public class Student implements Serializable {
 
     @Id
     @Column(name = "STUDENT_REGISTRATION_NUMBER", unique = true, nullable = false)

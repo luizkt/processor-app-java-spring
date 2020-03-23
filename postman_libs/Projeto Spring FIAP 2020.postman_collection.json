@@ -52,12 +52,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/aluno/all",
+							"raw": "{{url.api}}/student/all",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
-								"aluno",
+								"student",
 								"all"
 							]
 						}
@@ -78,15 +78,15 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"matricula\": \"12\",\n\t\"nome\": \"Luiz\"\n}"
+							"raw": "{\n\t\"student_registration_number\": \"12\",\n\t\"name\": \"Luiz\"\n}"
 						},
 						"url": {
-							"raw": "{{url.api}}/aluno/add",
+							"raw": "{{url.api}}/student/add",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
-								"aluno",
+								"student",
 								"add"
 							]
 						}
@@ -106,12 +106,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{url.api}}/aluno/load_from_csv",
+							"raw": "{{url.api}}/student/load_from_csv",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
-								"aluno",
+								"student",
 								"load_from_csv"
 							]
 						}
@@ -132,15 +132,15 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"nome\": \"Luiz\"\n}"
+							"raw": "{\n\t\"name\": \"Luiz\"\n}"
 						},
 						"url": {
-							"raw": "{{url.api}}/aluno/update/12",
+							"raw": "{{url.api}}/student/update/12",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
-								"aluno",
+								"student",
 								"update",
 								"12"
 							]
@@ -162,6 +162,65 @@
 								"aluno",
 								"delete",
 								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Transações",
+			"item": [
+				{
+					"name": "POST - Adiciona transação",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_id\": 2,\n    \"student_registration_number\": 30955634,\n    \"pan_final\": \"2123\",\n    \"amount\": 21.13,\n    \"description\": \"Transação teste\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url.api}}/transaction/add",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"transaction",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET - Busca todas as transações por aluno",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/transaction/student/3095564",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"transaction",
+								"student",
+								"3095564"
 							]
 						}
 					},

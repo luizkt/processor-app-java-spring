@@ -28,198 +28,196 @@ import br.com.fiap.model.StudentJson;
 @RequestMapping(path = "/student")
 public class StudentService {
 
-	@Autowired
-	private StudentRepository studentRepository;
+    @Autowired
+    private StudentRepository studentRepository;
 
-	@Transactional
-	@RequestMapping(path = "/add", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<String> add(@Valid @RequestBody StudentJson payload) {
+    @Transactional
+    @RequestMapping(path = "/add", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> add(@Valid @RequestBody StudentJson payload) {
 
-		try {
+        try {
 
-			Student student = new Student();
+            Student student = new Student();
 
-			student.setStudentRegistrationNumber(payload.getStudentRegistrationNumber());
-			student.setName(payload.getName());
+            student.setStudentRegistrationNumber(payload.getStudentRegistrationNumber());
+            student.setName(payload.getName());
 
-			studentRepository.save(student);
+            studentRepository.save(student);
 
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			String body = "{\"message\":\"Added the student successfully\"}";
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            String body = "{\"message\":\"Added the student successfully\"}";
 
-			return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
 
-		} catch (Exception e) {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			String body = "{\"message\":\"An error has occurred\", \"Exception\":" + e.getMessage() + "}";
+        } catch (Exception e) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
 
-			return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
-		}
+            return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+        }
 
-	}
+    }
 
-	@Transactional()
-	@RequestMapping(value = "/load_from_csv", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<String> loadFromCsv() {
+    @Transactional()
+    @RequestMapping(value = "/load_from_csv", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> loadFromCsv() {
 
-		List<Student> students = new ArrayList<>();
+        List<Student> students = new ArrayList<>();
 
-		try {
+        try {
 
-			BufferedReader csvReader = new BufferedReader(new FileReader("./files/lista_alunos.csv"));
-			String row;
-			while ((row = csvReader.readLine()) != null) {
-				String[] data = row.split(";");
-				Student student = new Student();
+            BufferedReader csvReader = new BufferedReader(new FileReader("./files/lista_alunos.csv"));
+            String row;
+            while ((row = csvReader.readLine()) != null) {
+                String[] data = row.split(";");
+                Student student = new Student();
 
-				student.setName(data[0]);
-				student.setStudentRegistrationNumber(Integer.parseInt(data[1]));
+                student.setName(data[0]);
+                student.setStudentRegistrationNumber(Integer.parseInt(data[1]));
 
-				students.add(student);
-			}
-			csvReader.close();
+                students.add(student);
+            }
+            csvReader.close();
 
-			studentRepository.saveAll(students);
+            studentRepository.saveAll(students);
 
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			String body = "{\"message\":\"Added all the students successfully\"}";
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            String body = "{\"message\":\"Added all the students successfully\"}";
 
-			return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
 
-		} catch (Exception e) {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			String body = "{\"message\":\"An error has occurred\", \"Exception\":" + e.getMessage() + "}";
+        } catch (Exception e) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
 
-			return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
-		}
-	}
+            return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+        }
+    }
 
-	@Transactional
-	@RequestMapping(path = "/update/{studentRegistrationNumber}", method = RequestMethod.PATCH)
-	@ResponseBody
-	public ResponseEntity<String> updateStudentByStudentRegistrationNumber(@RequestBody StudentJson payload,
-			@PathVariable("studentRegistrationNumber") Integer studentRegistrationNumber) {
+    @Transactional
+    @RequestMapping(path = "/update/{studentRegistrationNumber}", method = RequestMethod.PATCH)
+    @ResponseBody
+    public ResponseEntity<String> updateStudentByStudentRegistrationNumber(@RequestBody StudentJson payload,
+                                                                           @PathVariable("studentRegistrationNumber") Integer studentRegistrationNumber) {
 
-		try {
+        try {
 
-			List<Student> studentList = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
+            Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
 
-			studentList.forEach(student -> {
-				student.setName(payload.getName() == null || payload.getName().isEmpty()
-						? student.getName()
-						: payload.getName());
+            student.setName(payload.getName() == null || payload.getName().isEmpty()
+                    ? student.getName()
+                    : payload.getName());
 
-				
-				studentRepository.save(student);
-			});
 
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			String body = "{\"Message\":\"Updated the student successfully\"}";
+            studentRepository.save(student);
 
-			return new ResponseEntity<>(body, headers, HttpStatus.OK);
 
-		} catch (Exception e) {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			String body = "{\"message\":\"An error has occurred\", \"Exception\":" + e.getMessage() + "}";
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            String body = "{\"Message\":\"Updated the student successfully\"}";
 
-			return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
-		}
+            return new ResponseEntity<>(body, headers, HttpStatus.OK);
 
-	}
+        } catch (Exception e) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
 
-	@Transactional
-	@RequestMapping(path = "/delete/{studentRegistrationNumber}", method = RequestMethod.DELETE)
-	@ResponseBody
-	public ResponseEntity<String> deleteStudentByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
+            return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+        }
 
-		try {
+    }
 
-			List<Student> studentList = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
+    @Transactional
+    @RequestMapping(path = "/delete/{studentRegistrationNumber}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity<String> deleteStudentByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
 
-			studentList.forEach(student -> studentRepository.deleteById(student.getStudentRegistrationNumber()));
+        try {
 
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			String body = "{\"Mensagem\":\"Cliente excluido com sucesso\"}";
+            Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
 
-			return new ResponseEntity<>(body, headers, HttpStatus.OK);
+            studentRepository.deleteById(student.getStudentRegistrationNumber());
 
-		} catch (Exception e) {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-			String body = "{\"message\":\"An error has occurred\", \"Exception\":" + e.getMessage() + "}";
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            String body = "{\"Mensagem\":\"Cliente excluido com sucesso\"}";
 
-			return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
-		}
+            return new ResponseEntity<>(body, headers, HttpStatus.OK);
 
-	}
+        } catch (Exception e) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+            String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
 
-	@Transactional(readOnly = true)
-	@RequestMapping(path = "/all", method = RequestMethod.GET)
-	@ResponseBody
-	public Iterable<StudentJson> getAllAlunos() {
-		
-		List<StudentJson> alunosJson = new ArrayList<>();
-		
-		studentRepository.findAll().forEach(student -> {
-			StudentJson studentJson = new StudentJson();
+            return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+        }
 
-			studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
-			studentJson.setName(student.getName());
+    }
 
-			alunosJson.add(studentJson);
-		});
-		
-		return alunosJson;
-		
-	}
+    @Transactional(readOnly = true)
+    @RequestMapping(path = "/all", method = RequestMethod.GET)
+    @ResponseBody
+    public Iterable<StudentJson> getAllStudents() {
 
-	@Transactional(readOnly = true)
-	@RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<StudentJson> findByName(@PathVariable String name) {
-		
-		List<StudentJson> alunosJson = new ArrayList<>();
-		
-		studentRepository.findByName(name).forEach(student -> {
-			StudentJson studentJson = new StudentJson();
+        List<StudentJson> alunosJson = new ArrayList<>();
 
-			studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
-			studentJson.setName(student.getName());
+        studentRepository.findAll().forEach(student -> {
+            StudentJson studentJson = new StudentJson();
 
-			alunosJson.add(studentJson);
-		});
-		
-		return alunosJson;
-	}
+            studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
+            studentJson.setName(student.getName());
 
-	@Transactional(readOnly = true)
-	@RequestMapping(value = "/studentRegistrationNumber/{studentRegistrationNumber}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<StudentJson> findByMatricula(@PathVariable Integer studentRegistrationNumber) {
+            alunosJson.add(studentJson);
+        });
 
-		List<StudentJson> alunosJson = new ArrayList<>();
+        return alunosJson;
 
-		studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber).forEach(student -> {
-			StudentJson studentJson = new StudentJson();
+    }
 
-			studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
-			studentJson.setName(student.getName());
+    @Transactional(readOnly = true)
+    @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<StudentJson> findByName(@PathVariable String name) {
 
-			alunosJson.add(studentJson);
+        List<StudentJson> alunosJson = new ArrayList<>();
 
-			alunosJson.add(studentJson);
-		});
+        studentRepository.findByName(name).forEach(student -> {
+            StudentJson studentJson = new StudentJson();
 
-		return alunosJson;
-	}
+            studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
+            studentJson.setName(student.getName());
+
+            alunosJson.add(studentJson);
+        });
+
+        return alunosJson;
+    }
+
+    @Transactional(readOnly = true)
+    @RequestMapping(value = "/studentRegistrationNumber/{studentRegistrationNumber}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<StudentJson> findByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
+
+        List<StudentJson> alunosJson = new ArrayList<>();
+
+        Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
+		StudentJson studentJson = new StudentJson();
+
+		studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
+		studentJson.setName(student.getName());
+
+		alunosJson.add(studentJson);
+
+		alunosJson.add(studentJson);
+
+        return alunosJson;
+    }
 
 }

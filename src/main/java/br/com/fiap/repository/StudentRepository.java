@@ -15,6 +15,6 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
 	public List<Student> findByName(@Param("name") String name);
 	
 	@Query("select s from Student s where s.studentRegistrationNumber = :studentRegistrationNumber")
-	public List<Student> findByStudentRegistrationNumber(@Param("studentRegistrationNumber") Integer studentRegistrationNumber);
+	public Student findByStudentRegistrationNumber(@Param("studentRegistrationNumber") Integer studentRegistrationNumber);
 	
 }

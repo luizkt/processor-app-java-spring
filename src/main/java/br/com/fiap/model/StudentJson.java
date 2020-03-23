@@ -6,27 +6,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class StudentJson {
 
-	@JsonProperty("student_registration_number")
-	@NotNull
-	private Integer studentRegistrationNumber;
-	
-	@JsonProperty("name")
-	@NotNull
-	private String name;
+    @JsonProperty("student_registration_number")
+    @NotNull
+    private Integer studentRegistrationNumber;
 
-	public Integer getStudentRegistrationNumber() {
-		return studentRegistrationNumber;
-	}
+    @JsonProperty("name")
+    @NotNull
+    private String name;
 
-	public void setStudentRegistrationNumber(Integer studentRegistrationNumber) {
-		this.studentRegistrationNumber = studentRegistrationNumber;
-	}
+    public Integer getStudentRegistrationNumber() {
+        return studentRegistrationNumber;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setStudentRegistrationNumber(Integer studentRegistrationNumber) {
+        this.studentRegistrationNumber = studentRegistrationNumber;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
