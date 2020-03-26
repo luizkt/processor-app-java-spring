@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentRepository extends CrudRepository<Student, Integer> {
 
-	@Query("select s from Student s where s.name = :name")
+	@Query("SELECT s FROM Student s WHERE s.name LIKE %:name%")
 	public List<Student> findByName(@Param("name") String name);
 	
-	@Query("select s from Student s where s.studentRegistrationNumber = :studentRegistrationNumber")
+	@Query("SELECT s FROM Student s WHERE s.studentRegistrationNumber = :studentRegistrationNumber")
 	public Student findByStudentRegistrationNumber(@Param("studentRegistrationNumber") Integer studentRegistrationNumber);
 	
 }

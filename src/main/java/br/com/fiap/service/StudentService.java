@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import br.com.fiap.entity.Student;
 import br.com.fiap.repository.StudentRepository;
+import br.com.fiap.utils.NameFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.fiap.model.StudentJson;
-
 @RestController
 @RequestMapping(path = "/student")
 public class StudentService {
@@ -34,15 +33,10 @@ public class StudentService {
     @Transactional
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> add(@Valid @RequestBody StudentJson payload) {
+    public ResponseEntity<String> add(@Valid @RequestBody Student student) {
 
         try {
-
-            Student student = new Student();
-
-            student.setStudentRegistrationNumber(payload.getStudentRegistrationNumber());
-            student.setName(payload.getName());
-
+            student.setName(NameFormatter.capitalizeName(student.getName()));
             studentRepository.save(student);
 
             HttpHeaders headers = new HttpHeaders();
@@ -76,7 +70,7 @@ public class StudentService {
                 String[] data = row.split(";");
                 Student student = new Student();
 
-                student.setName(data[0]);
+                student.setName(NameFormatter.capitalizeName(data[0]));
                 student.setStudentRegistrationNumber(Integer.parseInt(data[1]));
 
                 students.add(student);
@@ -103,24 +97,22 @@ public class StudentService {
     @Transactional
     @RequestMapping(path = "/update/{studentRegistrationNumber}", method = RequestMethod.PATCH)
     @ResponseBody
-    public ResponseEntity<String> updateStudentByStudentRegistrationNumber(@RequestBody StudentJson payload,
+    public ResponseEntity<String> updateStudentByStudentRegistrationNumber(@RequestBody Student studentUpdate,
                                                                            @PathVariable("studentRegistrationNumber") Integer studentRegistrationNumber) {
 
         try {
 
-            Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
+            Student studentDatabase = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
 
-            student.setName(payload.getName() == null || payload.getName().isEmpty()
-                    ? student.getName()
-                    : payload.getName());
+            studentDatabase.setName(studentUpdate.getName() == null || studentUpdate.getName().isEmpty()
+                    ? NameFormatter.capitalizeName(studentDatabase.getName())
+                    : NameFormatter.capitalizeName(studentUpdate.getName()));
 
-
-            studentRepository.save(student);
-
+            studentRepository.save(studentDatabase);
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"Message\":\"Updated the student successfully\"}";
+            String body = "{\"message\":\"Updated the student successfully\"}";
 
             return new ResponseEntity<>(body, headers, HttpStatus.OK);
 
@@ -147,7 +139,7 @@ public class StudentService {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"Mensagem\":\"Cliente excluido com sucesso\"}";
+            String body = "{\"message\":\"Deleted the student successfully\"}";
 
             return new ResponseEntity<>(body, headers, HttpStatus.OK);
 
@@ -164,60 +156,22 @@ public class StudentService {
     @Transactional(readOnly = true)
     @RequestMapping(path = "/all", method = RequestMethod.GET)
     @ResponseBody
-    public Iterable<StudentJson> getAllStudents() {
-
-        List<StudentJson> alunosJson = new ArrayList<>();
-
-        studentRepository.findAll().forEach(student -> {
-            StudentJson studentJson = new StudentJson();
-
-            studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
-            studentJson.setName(student.getName());
-
-            alunosJson.add(studentJson);
-        });
-
-        return alunosJson;
-
+    public Iterable<Student> getAllStudents() {
+        return studentRepository.findAll();
     }
 
     @Transactional(readOnly = true)
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     @ResponseBody
-    public List<StudentJson> findByName(@PathVariable String name) {
-
-        List<StudentJson> alunosJson = new ArrayList<>();
-
-        studentRepository.findByName(name).forEach(student -> {
-            StudentJson studentJson = new StudentJson();
-
-            studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
-            studentJson.setName(student.getName());
-
-            alunosJson.add(studentJson);
-        });
-
-        return alunosJson;
+    public List<Student> findByName(@PathVariable String name) {
+        return studentRepository.findByName(name);
     }
 
     @Transactional(readOnly = true)
     @RequestMapping(value = "/studentRegistrationNumber/{studentRegistrationNumber}", method = RequestMethod.GET)
     @ResponseBody
-    public List<StudentJson> findByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
-
-        List<StudentJson> alunosJson = new ArrayList<>();
-
-        Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
-		StudentJson studentJson = new StudentJson();
-
-		studentJson.setStudentRegistrationNumber(student.getStudentRegistrationNumber());
-		studentJson.setName(student.getName());
-
-		alunosJson.add(studentJson);
-
-		alunosJson.add(studentJson);
-
-        return alunosJson;
+    public Student findByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
+        return studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
     }
 
 }

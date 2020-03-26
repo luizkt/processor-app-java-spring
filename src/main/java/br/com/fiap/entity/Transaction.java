@@ -1,6 +1,10 @@
 package br.com.fiap.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -9,19 +13,31 @@ public class Transaction implements Serializable {
 
     @Id
     @Column(name = "TRANSACTION_ID", unique = true, nullable = false)
+    @JsonProperty("transaction_id")
+    @NotNull
     private Integer transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STUDENT_REGISTRATION_NUMBER")
+    @JsonIgnore
     private Student student;
 
+    @JsonProperty("student_registration_number")
+    @Transient
+    private Integer studentRegistrationNumber;
+
     @Column(name = "PAN_FINAL")
+    @JsonProperty("pan_final")
+    @NotNull
     private String panFinal;
 
     @Column(name = "AMOUNT")
+    @JsonProperty("amount")
+    @NotNull
     private Double amount;
 
     @Column(name = "DESCRIPTION")
+    @JsonProperty("description")
     private String description;
 
     public Integer getTransactionId() {
@@ -38,6 +54,14 @@ public class Transaction implements Serializable {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public Integer getStudentRegistrationNumber() {
+        return studentRegistrationNumber;
+    }
+
+    public void setStudentRegistrationNumber(Integer studentRegistrationNumber) {
+        this.studentRegistrationNumber = studentRegistrationNumber;
     }
 
     public String getPanFinal() {

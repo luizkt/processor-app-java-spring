@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
 
-    @Query("select t from Transaction t where t.student = :studentRegistrationNumber")
+    @Query("SELECT t FROM Transaction t WHERE t.student = :studentRegistrationNumber")
     public List<Transaction> findAllTransactionsFromStudent(@Param("studentRegistrationNumber") Student studentRegistrationNumber);
 }

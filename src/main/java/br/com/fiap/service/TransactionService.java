@@ -2,10 +2,8 @@ package br.com.fiap.service;
 
 import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
-import br.com.fiap.model.TransactionJson;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/transaction")
@@ -33,26 +29,18 @@ public class TransactionService {
     @Transactional
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> add (@Valid @RequestBody Map<String, Object> payload) {
+    public ResponseEntity<String> add(@Valid @RequestBody Transaction transaction) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            TransactionJson transactionJson = mapper.convertValue(payload, TransactionJson.class);
-            Transaction transaction = new Transaction();
+            if (transaction.getStudentRegistrationNumber() == null)
+                throw new Exception("\"Student registration number is required\"");
 
-            Student student = studentRepository.findByStudentRegistrationNumber(transactionJson.getStudentRegistrationNumber());
-            if(student == null) {
+            transaction.setStudent(studentRepository.findByStudentRegistrationNumber(transaction.getStudentRegistrationNumber()));
+
+            if (transaction.getStudent() == null)
                 throw new Exception("\"Student registration number not found\"");
-            }
 
-            if(transactionRepository.existsById(transactionJson.getTransactionId())) {
+            if (transactionRepository.existsById(transaction.getTransactionId()))
                 throw new Exception("\"Transaction ID already exist\"");
-            }
-
-            transaction.setTransactionId(transactionJson.getTransactionId());
-            transaction.setStudent(student);
-            transaction.setPanFinal(transactionJson.getPanFinal());
-            transaction.setAmount(transactionJson.getAmount());
-            transaction.setDescription(transactionJson.getDescription());
 
             transactionRepository.save(transaction);
 
@@ -74,29 +62,18 @@ public class TransactionService {
     @Transactional(readOnly = true)
     @RequestMapping(path = "student/{studentRegistrationNumber}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<TransactionJson>> findAllTransactionsFromStudent(@PathVariable Integer studentRegistrationNumber) {
+    public ResponseEntity<List<Transaction>> findAllTransactionsFromStudent(@PathVariable Integer studentRegistrationNumber) {
 
         Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
 
         List<Transaction> transactions = transactionRepository.findAllTransactionsFromStudent(student);
 
-        List<TransactionJson> transactionsJson = new ArrayList<>();
-        for(Transaction transaction : transactions) {
-            TransactionJson transactionJson = new TransactionJson();
-
-            transactionJson.setTransactionId(transaction.getTransactionId());
-            transactionJson.setStudentRegistrationNumber(transaction.getStudent().getStudentRegistrationNumber());
-            transactionJson.setPanFinal(transaction.getPanFinal());
-            transactionJson.setAmount(transaction.getAmount());
-            transactionJson.setDescription(transaction.getDescription());
-
-            transactionsJson.add(transactionJson);
-        }
+        transactions.forEach(transaction -> transaction.setStudentRegistrationNumber(transaction.getStudent().getStudentRegistrationNumber()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        return new ResponseEntity<>(transactionsJson, headers, HttpStatus.OK);
+        return new ResponseEntity<>(transactions, headers, HttpStatus.OK);
 
     }
 }
