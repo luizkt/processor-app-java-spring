@@ -5,7 +5,6 @@ import br.com.fiap.entity.Transaction;
 import br.com.fiap.model.TransactionJson;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
-import br.com.fiap.service.exception.TransactionServiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -42,11 +41,11 @@ public class TransactionService {
 
             Student student = studentRepository.findByStudentRegistrationNumber(transactionJson.getStudentRegistrationNumber());
             if(student == null) {
-                throw new TransactionServiceException("\"Student registration number not found\"");
+                throw new Exception("\"Student registration number not found\"");
             }
 
             if(transactionRepository.existsById(transactionJson.getTransactionId())) {
-                throw new TransactionServiceException("\"Transaction ID already exist\"");
+                throw new Exception("\"Transaction ID already exist\"");
             }
 
             transaction.setTransactionId(transactionJson.getTransactionId());
