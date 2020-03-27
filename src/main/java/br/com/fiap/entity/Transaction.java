@@ -2,6 +2,7 @@ package br.com.fiap.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ public class Transaction implements Serializable {
     @Column(name = "TRANSACTION_ID", unique = true, nullable = false)
     @JsonProperty("transaction_id")
     @NotNull
+    @ApiModelProperty(value = "Transaction identification")
     private Integer transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,20 +26,24 @@ public class Transaction implements Serializable {
 
     @JsonProperty("student_registration_number")
     @Transient
+    @ApiModelProperty(value = "Institution's registration number")
     private Integer studentRegistrationNumber;
 
     @Column(name = "PAN_FINAL")
     @JsonProperty("pan_final")
     @NotNull
+    @ApiModelProperty(value = "Last 4 digits from students credit card")
     private String panFinal;
 
     @Column(name = "AMOUNT")
     @JsonProperty("amount")
     @NotNull
+    @ApiModelProperty(value = "Amount of the transaction")
     private Double amount;
 
     @Column(name = "DESCRIPTION")
     @JsonProperty("description")
+    @ApiModelProperty(value = "Description of the transaction")
     private String description;
 
     public Integer getTransactionId() {

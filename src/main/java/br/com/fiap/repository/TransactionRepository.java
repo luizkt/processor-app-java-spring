@@ -14,4 +14,7 @@ public interface TransactionRepository extends CrudRepository<Transaction, Integ
 
     @Query("SELECT t FROM Transaction t WHERE t.student = :studentRegistrationNumber")
     public List<Transaction> findAllTransactionsFromStudent(@Param("studentRegistrationNumber") Student studentRegistrationNumber);
+
+    @Query("SELECT t FROM Transaction t WHERE t.transactionId = :transactionId")
+    public Transaction findTransactionByTransactionId(@Param("transactionId") Integer transactionId);
 }
