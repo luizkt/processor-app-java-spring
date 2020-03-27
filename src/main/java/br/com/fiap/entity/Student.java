@@ -11,6 +11,13 @@ import java.io.Serializable;
 @Table(name = "STUDENT", uniqueConstraints = {@UniqueConstraint(columnNames = "STUDENT_REGISTRATION_NUMBER")})
 public class Student implements Serializable {
 
+    public Student(){}
+
+    public Student(Integer studentRegistrationNumber, String name){
+        this.studentRegistrationNumber = studentRegistrationNumber;
+        this.name = name;
+    }
+
     @Id
     @Column(name = "STUDENT_REGISTRATION_NUMBER", unique = true, nullable = false)
     @JsonProperty("student_registration_number")

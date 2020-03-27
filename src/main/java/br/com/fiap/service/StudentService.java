@@ -83,10 +83,7 @@ public class StudentService {
             String row;
             while ((row = csvReader.readLine()) != null) {
                 String[] data = row.split(";");
-                Student student = new Student();
-
-                student.setName(NameFormatter.capitalizeName(data[0]));
-                student.setStudentRegistrationNumber(Integer.parseInt(data[1]));
+                Student student = new Student(Integer.parseInt(data[1]), NameFormatter.capitalizeName(data[0]));
 
                 students.add(student);
             }

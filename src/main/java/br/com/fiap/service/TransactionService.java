@@ -4,6 +4,7 @@ import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;

@@ -12,6 +12,26 @@ import java.io.Serializable;
 @Table(name = "TRANSACTION", uniqueConstraints = {@UniqueConstraint(columnNames = "TRANSACTION_ID")})
 public class Transaction implements Serializable {
 
+    public Transaction() {
+    }
+
+    public Transaction(Integer transactionId, Integer studentRegistrationNumber, String panFinal, Double amount, String description) {
+        this.transactionId = transactionId;
+        this.studentRegistrationNumber = studentRegistrationNumber;
+        this.panFinal = panFinal;
+        this.amount = amount;
+        this.description = description;
+    }
+
+    public Transaction(Integer transactionId, Student student, Integer studentRegistrationNumber, String panFinal, Double amount, String description) {
+        this.transactionId = transactionId;
+        this.student = student;
+        this.studentRegistrationNumber = studentRegistrationNumber;
+        this.panFinal = panFinal;
+        this.amount = amount;
+        this.description = description;
+    }
+
     @Id
     @Column(name = "TRANSACTION_ID", unique = true, nullable = false)
     @JsonProperty("transaction_id")
