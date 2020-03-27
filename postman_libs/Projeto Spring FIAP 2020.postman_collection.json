@@ -14,14 +14,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/aluno/matricula/12",
+							"raw": "{{url.api}}/processor-app/api/student/studentRegistrationNumber/13",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
-								"aluno",
-								"matricula",
-								"12"
+								"processor-app",
+								"api",
+								"student",
+								"studentRegistrationNumber",
+								"13"
 							]
 						}
 					},
@@ -33,14 +35,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/aluno/nome/Luiz",
+							"raw": "{{url.api}}/processor-app/api/student/name/joNAs",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
-								"aluno",
-								"nome",
-								"Luiz"
+								"processor-app",
+								"api",
+								"student",
+								"name",
+								"joNAs"
 							]
 						}
 					},
@@ -52,11 +56,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/student/all",
+							"raw": "{{url.api}}/processor-app/api/student/all",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
+								"processor-app",
+								"api",
 								"student",
 								"all"
 							]
@@ -78,14 +84,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"student_registration_number\": \"12\",\n\t\"name\": \"Luiz\"\n}"
+							"raw": "{\n\t\"student_registration_number\": \"13\",\n\t\"name\": \"jonas da silva\"\n}"
 						},
 						"url": {
-							"raw": "{{url.api}}/student/add",
+							"raw": "{{url.api}}/processor-app/api/student/add",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
+								"processor-app",
+								"api",
 								"student",
 								"add"
 							]
@@ -106,11 +114,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{url.api}}/student/load_from_csv",
+							"raw": "{{url.api}}/processor-app/api/student/load_from_csv",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
+								"processor-app",
+								"api",
 								"student",
 								"load_from_csv"
 							]
@@ -132,14 +142,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Luiz\"\n}"
+							"raw": "{\n\t\"name\": \"jonas doidao debas\"\n}"
 						},
 						"url": {
-							"raw": "{{url.api}}/student/update/12",
+							"raw": "{{url.api}}/processor-app/api/student/update/12",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
+								"processor-app",
+								"api",
 								"student",
 								"update",
 								"12"
@@ -154,12 +166,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/aluno/delete/12",
+							"raw": "{{url.api}}/processor-app/api/student/delete/12",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
-								"aluno",
+								"processor-app",
+								"api",
+								"student",
 								"delete",
 								"12"
 							]
@@ -187,7 +201,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"transaction_id\": 2,\n    \"student_registration_number\": 30955634,\n    \"pan_final\": \"2123\",\n    \"amount\": 21.13,\n    \"description\": \"Transação teste\"\n}",
+							"raw": "{\n    \"transaction_id\": 4,\n    \"student_registration_number\": 3095564,\n    \"pan_final\": \"2123\",\n    \"amount\": 21.13,\n    \"description\": \"Transação teste\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -195,11 +209,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url.api}}/transaction/add",
+							"raw": "{{url.api}}/processor-app/api/transaction/add",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
+								"processor-app",
+								"api",
 								"transaction",
 								"add"
 							]
@@ -213,11 +229,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/transaction/student/3095564",
+							"raw": "{{url.api}}/processor-app/api/transaction/student/3095564",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
+								"processor-app",
+								"api",
 								"transaction",
 								"student",
 								"3095564"
