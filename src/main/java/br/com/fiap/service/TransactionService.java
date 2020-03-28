@@ -78,7 +78,7 @@ public class TransactionService {
 
             Transaction transaction = transactionRepository.findTransactionByTransactionId(transactionId);
 
-            studentRepository.deleteById(transaction.getTransactionId());
+            transactionRepository.deleteById(transaction.getTransactionId());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());

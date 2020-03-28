@@ -1,7 +1,9 @@
 package br.com.fiap.config;
 
+import org.springframework.boot.test.context.TestConfiguration;
 import org.testcontainers.containers.MySQLContainer;
 
+@TestConfiguration
 public class ProcessorMySqlContainer extends MySQLContainer {
 
     private static final String IMAGE_VERSION = "mysql:5.7";
