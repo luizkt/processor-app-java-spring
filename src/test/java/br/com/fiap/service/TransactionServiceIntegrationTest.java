@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class TransactionServiceIntegrationTest {
     }
 
     @Test
-    public void shouldAddTransactionSuccessfully() {
+    public void givenNewTransaction_whenRegisteringIt_shouldAddTransactionSuccessfully() {
         Transaction transaction = new Transaction(
                 2000,
                 mockStudent(),
@@ -65,7 +66,7 @@ public class TransactionServiceIntegrationTest {
     }
 
     @Test
-    public void shouldThrowExceptionForTransactionAlreadyExist() {
+    public void givenRegisteredTransaction_whenRegisteringIt_shouldThrowExceptionForTransactionAlreadyExist() {
         ResponseEntity<String> response = transactionService.add(mockTransaction());
 
         assertTrue(response.getStatusCode().is4xxClientError());
@@ -73,7 +74,7 @@ public class TransactionServiceIntegrationTest {
     }
 
     @Test
-    public void shouldThrowExceptionForNonStudent() {
+    public void givenNotRegisteredStudent_whenRegisteringNewTransactionForHim_shouldThrowExceptionForNonStudent() {
         Transaction transaction = new Transaction(
                 1000,
                 new Student(222000, "Name 3"),
@@ -90,14 +91,14 @@ public class TransactionServiceIntegrationTest {
     }
 
     @Test
-    public void shouldFindAllTransactionsFromStudent() {
+    public void givenRegisteredStudent_whenSearchingForHisTransactions_shouldFindAllTransactionsFromStudent() {
         ResponseEntity<List<Transaction>> response = transactionService.findAllTransactionsFromStudent(mockTransaction().getStudentRegistrationNumber());
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
-    public void shouldDeleteTheTransaction() {
+    public void givenRegisteredTransaction_whenDeletingIt_shouldDeleteTheTransaction() {
         ResponseEntity<String> response = transactionService.deleteTransactionById(mockTransaction().getTransactionId());
 
         assertTrue(response.getStatusCode().is2xxSuccessful());

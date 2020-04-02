@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class StudentServiceIntegrationTest {
     }
 
     @Test
-    public void shouldAddStudentSuccessfully() {
+    public void givenNewStudent_whenRegisteringHim_shouldRegisterNewStudent() {
 
         ResponseEntity<String> response = studentService.add(new Student(111000, "New Student Name"));
 
@@ -52,7 +53,15 @@ public class StudentServiceIntegrationTest {
     }
 
     @Test
-    public void shouldUpdateStudentSuccessfully() {
+    public void givenRegisteredStudent_whenRegisteringHim_shouldThrowAnError() {
+
+        ResponseEntity<String> response = studentService.add(mockStudent());
+
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
+
+    @Test
+    public void givenRegisteredStudent_whenUpdatingGim_shouldUpdateStudentSuccessfully() {
 
         ResponseEntity<String> response = studentService.updateStudentByStudentRegistrationNumber(new Student(
                 mockStudent().getStudentRegistrationNumber(),
@@ -63,15 +72,18 @@ public class StudentServiceIntegrationTest {
     }
 
     @Test
-    public void shouldGetAllStudentsSuccessfully() {
+    public void givenNotRegisteredStudent_whenUpdatingHim_shouldThrowAnError() {
 
-        List<Student> students = (List<Student>) studentService.getAllStudents();
+        ResponseEntity<String> response = studentService.updateStudentByStudentRegistrationNumber(new Student(
+                123123,
+                "New Name"
+        ), mockStudent().getStudentRegistrationNumber());
 
-        assertTrue(students.size() == 1);
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
-    public void shouldFindStudentByNameSuccessfully() {
+    public void givenRegisteredStudent_whenSearchingByHisName_shouldFindStudentSuccessfully() {
 
         List<Student> students = studentService.findByName(mockStudent().getName());
 
@@ -79,7 +91,7 @@ public class StudentServiceIntegrationTest {
     }
 
     @Test
-    public void shouldFindStudentByRegistrantionNumberSuccessfully() {
+    public void givenRegisteredStudent_whenSearchingByHisRegisterNumber_shouldFindStudentSuccessfully() {
 
         Student student = studentService.findByStudentRegistrationNumber(mockStudent().getStudentRegistrationNumber());
 
@@ -87,7 +99,7 @@ public class StudentServiceIntegrationTest {
     }
 
     @Test
-    public void shouldDeleteStudentSuccessfully() {
+    public void givenRegisteredStudent_whenDeletingHim_shouldDeleteStudentSuccessfully() {
 
         ResponseEntity<String> response = studentService.deleteStudentByStudentRegistrationNumber(mockStudent().getStudentRegistrationNumber());
 

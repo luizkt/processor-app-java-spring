@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,7 +19,6 @@ import org.testcontainers.containers.MySQLContainer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -53,7 +53,7 @@ public class TransactionRepositoryIntegrationTest {
 
     @Test
     @Transactional
-    public void shouldFindAllTransactionsFromStudent() {
+    public void givenRegisteredStudent_whenSearchingHisTransactions_shouldFindAllTransactionsFromStudent() {
         List<Transaction> transactions = transactionRepository.findAllTransactionsFromStudent(new Student(1, "Name 1"));
 
         assertTrue(transactions.get(0).getTransactionId() == 11);
@@ -62,7 +62,7 @@ public class TransactionRepositoryIntegrationTest {
 
     @Test
     @Transactional
-    public void shouldFindTransactionByTransactionId() {
+    public void givenRegisteredTransaction_whenSearchingById_shouldFindTransactionByTransactionId() {
         Transaction transaction = transactionRepository.findTransactionByTransactionId(11);
 
         assertTrue(transaction.getTransactionId() == 11);

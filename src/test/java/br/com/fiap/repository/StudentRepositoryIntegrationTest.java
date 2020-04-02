@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -43,7 +44,7 @@ public class StudentRepositoryIntegrationTest {
 
     @Test
     @Transactional
-    public void shouldFindStudentByName() {
+    public void givenRegisteredStudent_whenSearchingForHisName_shouldFindStudent() {
         List<Student> students = studentRepository.findByName("Name 1");
 
         assertEquals(1, students.size());
@@ -52,7 +53,7 @@ public class StudentRepositoryIntegrationTest {
 
     @Test
     @Transactional
-    public void shouldFindByStudentRegistrationNumber() {
+    public void givenRegisteredStudent_whenSearchingForHisRegisterNumber_shouldFindByStudentRegistrationNumber() {
         Student student = studentRepository.findByStudentRegistrationNumber(1);
 
         assertTrue(student.getStudentRegistrationNumber() == 1);
