@@ -27,6 +27,10 @@ public class StudentService {
 
         try {
             student.setName(NameFormatter.capitalizeName(student.getName()));
+
+            if (studentRepository.existsById(student.getStudentRegistrationNumber()))
+                throw new Exception("\"Student registration number already exist\"");
+
             studentRepository.save(student);
 
             HttpHeaders headers = new HttpHeaders();
@@ -81,10 +85,11 @@ public class StudentService {
 
     @Transactional
     public ResponseEntity<String> updateStudentByStudentRegistrationNumber(Student studentUpdate, Integer studentRegistrationNumber) {
-
         try {
-
             Student studentDatabase = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
+
+            if(studentDatabase == null)
+                throw new Exception("\"Student registration number doesn't exist\"");
 
             studentDatabase.setName(studentUpdate.getName() == null || studentUpdate.getName().isEmpty()
                     ? NameFormatter.capitalizeName(studentDatabase.getName())
@@ -110,7 +115,6 @@ public class StudentService {
 
     @Transactional
     public ResponseEntity<String> deleteStudentByStudentRegistrationNumber(Integer studentRegistrationNumber) {
-
         try {
 
             Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
@@ -131,11 +135,6 @@ public class StudentService {
             return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
         }
 
-    }
-
-    @Transactional(readOnly = true)
-    public Iterable<Student> getAllStudents() {
-        return studentRepository.findAll();
     }
 
     @Transactional(readOnly = true)

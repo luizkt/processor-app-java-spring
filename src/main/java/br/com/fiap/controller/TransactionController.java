@@ -13,13 +13,12 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/transaction")
 public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
 
-    @RequestMapping(path = "/add", method = RequestMethod.POST, produces="application/json", consumes="application/json")
+    @RequestMapping(path = "/transactions", method = RequestMethod.POST, produces="application/json", consumes="application/json")
     @ResponseBody
     @ApiOperation(value = "Create new transaction for the student")
     @ApiResponses(value = {
@@ -31,19 +30,7 @@ public class TransactionController {
         return transactionService.add(transaction);
     }
 
-    @RequestMapping(path = "/student/{studentRegistrationNumber}", method = RequestMethod.GET, produces="application/json")
-    @ResponseBody
-    @ApiOperation(value = "Find all transactions by student registration number")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Get all transactions from the student"),
-            @ApiResponse(code = 400, message = "Some field have wrong information"),
-            @ApiResponse(code = 500, message = "Some error occurred"),
-    })
-    public ResponseEntity<List<Transaction>> findAllTransactionsFromStudent(@PathVariable Integer studentRegistrationNumber) {
-        return transactionService.findAllTransactionsFromStudent(studentRegistrationNumber);
-    }
-
-    @RequestMapping(path = "/{transactionId}", method = RequestMethod.DELETE, produces="application/json")
+    @RequestMapping(path = "/transactions/{transactionId}", method = RequestMethod.DELETE, produces="application/json")
     @ResponseBody
     @ApiOperation(value = "Delete the transaction by transaction ID")
     @ApiResponses(value = {
