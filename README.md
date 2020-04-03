@@ -35,15 +35,20 @@ $ docker pull luizkt/processor-app-spring:latest
 
 ### Variáveis de ambiente
 
-* SPRING_DATASOURCE_URL - URL completa do banco de dados(jdbc:mysql://${HOST}:${PORT}/${DB_NAME}).
-* SPRING_DATASOURCE_USERNAME - Usuário do banco de dados.
-* SPRING_DATASOURCE_PASSWORD - Senha do banco de dados
+* MYSQL_HOST - URL do banco de dados(default: localhost)
+* MYSQL_PORT - Porta do banco de dados(default: 3306)
+* MYSQL_ARGS - Argumentos para a conexão
+* MYSQL_DATABASE_NAME - Nome do banco de dados
+* MYSQL_APPLICATION_USER - Usuário do banco de dados
+* MYSQL_APPLICATION_PASSWORD - Senha do banco de dados
 
 ```sh
 $ docker run --name processor_container \\ 
--e SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/processordb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false \\
--e SPRING_DATASOURCE_USERNAME=processorUser \\
--e SPRING_DATASOURCE_PASSWORD=fiap2020 \\
+-e MYSQL_HOST=db \\
+-e MYSQL_ARGS="useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false" \\
+-e MYSQL_DATABASE_NAME=processordb \\
+-e MYSQL_APPLICATION_USER=processorUser \\
+-e MYSQL_APPLICATION_PASSWORD=fiap2020 \\
 -p 8080:8080 \\
 -d luizkt/processor-app-spring:latest
 ```
