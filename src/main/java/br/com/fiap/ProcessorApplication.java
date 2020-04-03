@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = "br.com.fiap")
 @Configuration
-@PropertySource("application.properties")
 @EnableJpaRepositories(basePackages = { "br.com.fiap.repository" })
 @EntityScan(basePackages = "br.com.fiap.entity")
 public class ProcessorApplication {
