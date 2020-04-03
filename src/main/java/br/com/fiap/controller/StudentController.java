@@ -58,7 +58,7 @@ public class StudentController {
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
     public ResponseEntity<String> updateStudentByStudentRegistrationNumber(@RequestBody Student studentUpdate,
-                                                                           @PathVariable("studentRegistrationNumber") Integer studentRegistrationNumber) {
+                                                                           @PathVariable Integer studentRegistrationNumber) {
         return studentService.updateStudentByStudentRegistrationNumber(studentUpdate,studentRegistrationNumber);
     }
 

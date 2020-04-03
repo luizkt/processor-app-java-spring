@@ -15,8 +15,11 @@ import java.util.List;
 @RestController
 public class TransactionController {
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
+
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     @RequestMapping(path = "/transactions", method = RequestMethod.POST, produces="application/json", consumes="application/json")
     @ResponseBody

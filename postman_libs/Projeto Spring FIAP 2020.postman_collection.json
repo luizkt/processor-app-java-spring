@@ -9,20 +9,19 @@
 			"name": "Alunos",
 			"item": [
 				{
-					"name": "GET - Busca Aluno Matricula",
+					"name": "GET - Search student by registration number",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/student/studentRegistrationNumber/13",
+							"raw": "{{url.api}}/processor-app/api/students/13",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
-								"student",
-								"studentRegistrationNumber",
+								"students",
 								"13"
 							]
 						}
@@ -30,48 +29,32 @@
 					"response": []
 				},
 				{
-					"name": "GET - Busca Aluno Nome",
+					"name": "GET - Search student by name",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/student/name/joNAs",
+							"raw": "{{url.api}}/processor-app/api/students?name=Luiz",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
-								"student",
-								"name",
-								"joNAs"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET - Busca Todos Alunos",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url.api}}/processor-app/api/student/all",
-							"host": [
-								"{{url.api}}"
+								"students"
 							],
-							"path": [
-								"processor-app",
-								"api",
-								"student",
-								"all"
+							"query": [
+								{
+									"key": "name",
+									"value": "Luiz"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "POST - Adiciona Aluno",
+					"name": "POST - Add student",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -87,22 +70,21 @@
 							"raw": "{\n\t\"student_registration_number\": \"13\",\n\t\"name\": \"jonas da silva\"\n}"
 						},
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/student/add",
+							"raw": "{{url.api}}/processor-app/api/students",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
-								"student",
-								"add"
+								"students"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "POST - Adiciona Alunos CSV",
+					"name": "POST - Add students from CSV",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -114,14 +96,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/student/load_from_csv",
+							"raw": "{{url.api}}/processor-app/api/students/load_from_csv",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
-								"student",
+								"students",
 								"load_from_csv"
 							]
 						}
@@ -129,7 +111,7 @@
 					"response": []
 				},
 				{
-					"name": "PATCH - Atualiza Aluno",
+					"name": "PATCH - Update student",
 					"request": {
 						"method": "PATCH",
 						"header": [
@@ -145,15 +127,14 @@
 							"raw": "{\n\t\"name\": \"jonas doidao debas\"\n}"
 						},
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/student/update/12",
+							"raw": "{{url.api}}/processor-app/api/students/12",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
-								"student",
-								"update",
+								"students",
 								"12"
 							]
 						}
@@ -161,7 +142,7 @@
 					"response": []
 				},
 				{
-					"name": "DELETE - Exclui aluno por matricula",
+					"name": "DELETE - Delete student",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -188,7 +169,7 @@
 			"name": "Transações",
 			"item": [
 				{
-					"name": "POST - Adiciona transação",
+					"name": "POST - Add new transaction",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -224,21 +205,41 @@
 					"response": []
 				},
 				{
-					"name": "GET - Busca todas as transações por aluno",
+					"name": "GET - Search all transactions from student",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/transaction/student/3095564",
+							"raw": "{{url.api}}/processor-app/api/students/3095564/transactions",
 							"host": [
 								"{{url.api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
-								"transaction",
-								"student",
-								"3095564"
+								"students",
+								"3095564",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE - Remove transaction",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url.api}}/processor-app/api/transactions/1",
+							"host": [
+								"{{url.api}}"
+							],
+							"path": [
+								"processor-app",
+								"api",
+								"transactions",
+								"1"
 							]
 						}
 					},
