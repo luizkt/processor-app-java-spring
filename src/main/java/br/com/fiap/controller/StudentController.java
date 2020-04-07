@@ -37,18 +37,6 @@ public class StudentController {
         return studentService.add(student);
     }
 
-    @RequestMapping(value = "/students/load_from_csv", method = RequestMethod.POST, produces="application/json")
-    @ResponseBody
-    @ApiOperation(value = "Create new students from CSV file")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Add new students"),
-            @ApiResponse(code = 400, message = "Some field have wrong information"),
-            @ApiResponse(code = 500, message = "Some error occurred"),
-    })
-    public ResponseEntity<String> loadFromCsv() {
-        return studentService.loadFromCsv();
-    }
-
     @RequestMapping(path = "/students/{studentRegistrationNumber}", method = RequestMethod.PATCH, produces="application/json", consumes="application/json")
     @ResponseBody
     @ApiOperation(value = "Update the student")

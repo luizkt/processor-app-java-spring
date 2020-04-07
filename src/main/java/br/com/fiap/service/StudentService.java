@@ -1,8 +1,5 @@
 package br.com.fiap.service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.fiap.entity.Student;
@@ -47,40 +44,6 @@ public class StudentService {
             return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
         }
 
-    }
-
-    @Transactional()
-    public ResponseEntity<String> loadFromCsv() {
-
-        List<Student> students = new ArrayList<>();
-
-        try {
-
-            BufferedReader csvReader = new BufferedReader(new FileReader("./files/lista_alunos.csv"));
-            String row;
-            while ((row = csvReader.readLine()) != null) {
-                String[] data = row.split(";");
-                Student student = new Student(Integer.parseInt(data[1]), NameFormatter.capitalizeName(data[0]));
-
-                students.add(student);
-            }
-            csvReader.close();
-
-            studentRepository.saveAll(students);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"message\":\"Added all the students successfully\"}";
-
-            return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
-
-        } catch (Exception e) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
-
-            return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
-        }
     }
 
     @Transactional
