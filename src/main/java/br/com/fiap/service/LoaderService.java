@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,12 +22,13 @@ import java.util.List;
 @Service
 public class LoaderService {
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+    private final TransactionRepository transactionRepository;
 
-    @Autowired
-    private TransactionRepository transactionRepository;
-
+    public LoaderService(StudentRepository studentRepository, TransactionRepository transactionRepository) {
+        this.studentRepository = studentRepository;
+        this.transactionRepository = transactionRepository;
+    }
 
     @Transactional()
     public ResponseEntity<String> loadFromCsv() {
@@ -36,13 +36,14 @@ public class LoaderService {
         try {
 
             List<Student> students = csvReaderStudent();
-            List<Transaction> transactions = csvReaderTransaction();
+            List<Transaction> transactions = csvReaderTransaction(students);
 
             studentRepository.saveAll(students);
+            transactionRepository.saveAll(transactions);
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"message\":\"Added all the students successfully\"}";
+            String body = "{\"message\":\"Added all the students and transactions successfully\"}";
 
             return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
 
@@ -56,7 +57,6 @@ public class LoaderService {
     }
 
     private List<Student> csvReaderStudent() throws IOException {
-
         List<Student> students = new ArrayList<>();
 
         BufferedReader csvReader = new BufferedReader(new FileReader("./files/lista_alunos.csv"));
@@ -71,20 +71,24 @@ public class LoaderService {
         return students;
     }
 
-    private List<Transaction> csvReaderTransaction() throws IOException {
-
+    private List<Transaction> csvReaderTransaction(List<Student> students) throws IOException {
         List<Transaction> transactions = new ArrayList<>();
 
         BufferedReader csvReader = new BufferedReader(new FileReader("./files/lista_transacoes.csv"));
         String row;
         while ((row = csvReader.readLine()) != null) {
             String[] data = row.split(";");
-            Transaction transaction = new Transaction(Integer transactionId, Integer studentRegistrationNumber, String panFinal, Double amount, String description);
+            Transaction transaction = new Transaction(Integer.parseInt(data[0]), Integer.parseInt(data[1]), data[2], Double.parseDouble(data[3]), data[4]);
+
+            transaction.setStudent(
+                    students.stream()
+                            .filter(student -> transaction.getStudentRegistrationNumber().equals(student.getStudentRegistrationNumber()))
+                            .findAny()
+                            .orElse(null));
 
             transactions.add(transaction);
         }
         csvReader.close();
         return transactions;
     }
-}
 }
