@@ -43,19 +43,24 @@ $ docker pull luizkt/processor-app-spring:latest
 * MYSQL_APPLICATION_PASSWORD - Senha do banco de dados
 
 ```sh
-$ docker run --name processor_container \\ 
--e MYSQL_HOST=db \\
--e MYSQL_ARGS="useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false" \\
--e MYSQL_DATABASE_NAME=processordb \\
--e MYSQL_APPLICATION_USER=processorUser \\
--e MYSQL_APPLICATION_PASSWORD=fiap2020 \\
--p 8080:8080 \\
+$ docker run --name processor-app \
+-e MYSQL_HOST=db \
+-e MYSQL_ARGS="useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false" \
+-e MYSQL_DATABASE_NAME=processordb \
+-e MYSQL_APPLICATION_USER=processorUser \
+-e MYSQL_APPLICATION_PASSWORD=fiap2020 \
+-p 8080:8080 \
 -d luizkt/processor-app-spring:latest
 ```
 
-## Documentação de rotas
+# Documentação de rotas
 
 Construimos um arquivo do postman com todas as rotas construidas para facilitar a utilização da API, os arquivos estão 
 dentro da pasta `postman_libs`.
  
- A documentação swagger pode ser consultada na URL: `~/processor-app/api/swagger-ui.html` 
+ A documentação swagger pode ser consultada na URL: `~/processor-app/api/swagger-ui.html`
+ 
+ # Arquivo CSV para carregar massa inicial
+ 
+ Utilizar a rota documentada `POST /processor-app/api/loader/load_from_csv` para carregar os estudantes e transações do 
+ arquivo CSV  

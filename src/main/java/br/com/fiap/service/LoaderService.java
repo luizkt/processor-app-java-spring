@@ -32,9 +32,7 @@ public class LoaderService {
 
     @Transactional()
     public ResponseEntity<String> loadFromCsv() {
-
         try {
-
             List<Student> students = csvReaderStudent();
             List<Transaction> transactions = csvReaderTransaction(students);
 
@@ -56,10 +54,10 @@ public class LoaderService {
         }
     }
 
-    private List<Student> csvReaderStudent() throws IOException {
+    List<Student> csvReaderStudent() throws IOException {
         List<Student> students = new ArrayList<>();
 
-        BufferedReader csvReader = new BufferedReader(new FileReader("./files/lista_alunos.csv"));
+        BufferedReader csvReader = new BufferedReader(new FileReader("./files/students_list.csv"));
         String row;
         while ((row = csvReader.readLine()) != null) {
             String[] data = row.split(";");
@@ -74,7 +72,7 @@ public class LoaderService {
     private List<Transaction> csvReaderTransaction(List<Student> students) throws IOException {
         List<Transaction> transactions = new ArrayList<>();
 
-        BufferedReader csvReader = new BufferedReader(new FileReader("./files/lista_transacoes.csv"));
+        BufferedReader csvReader = new BufferedReader(new FileReader("./files/transactions_list.csv"));
         String row;
         while ((row = csvReader.readLine()) != null) {
             String[] data = row.split(";");

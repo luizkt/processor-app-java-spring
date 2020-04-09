@@ -2,6 +2,7 @@ package br.com.fiap.utils;
 
 public class NameFormatter {
     public static String capitalizeName(String str) {
+        str = str.toLowerCase();
         String[] words = str.split("\\s");
         String capitalizeName = "";
         for(String w:words) {
