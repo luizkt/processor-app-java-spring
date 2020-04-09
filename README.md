@@ -35,8 +35,7 @@ $ docker pull luizkt/processor-app-spring:latest
 
 ### Variáveis de ambiente
 
-* MYSQL_HOST - URL do banco de dados(default: localhost)
-* MYSQL_PORT - Porta do banco de dados(default: 3306)
+* MYSQL_HOST - URL do banco de dados(default: localhost:3306)
 * MYSQL_ARGS - Argumentos para a conexão
 * MYSQL_DATABASE_NAME - Nome do banco de dados
 * MYSQL_APPLICATION_USER - Usuário do banco de dados

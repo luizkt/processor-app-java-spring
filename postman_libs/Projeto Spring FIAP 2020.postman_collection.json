@@ -14,15 +14,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/students/13",
+							"raw": "{{url_api}}/processor-app/api/students/{{student_registration_number}}",
 							"host": [
-								"{{url.api}}"
+								"{{url_api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
 								"students",
-								"13"
+								"{{student_registration_number}}"
 							]
 						}
 					},
@@ -34,9 +34,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/students?name=Luiz",
+							"raw": "{{url_api}}/processor-app/api/students?name={{student_name}}",
 							"host": [
-								"{{url.api}}"
+								"{{url_api}}"
 							],
 							"path": [
 								"processor-app",
@@ -46,7 +46,7 @@
 							"query": [
 								{
 									"key": "name",
-									"value": "Luiz"
+									"value": "{{student_name}}"
 								}
 							]
 						}
@@ -67,44 +67,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"student_registration_number\": \"13\",\n\t\"name\": \"jonas da silva\"\n}"
+							"raw": "{\n\t\"student_registration_number\": {{student_registration_number}},\n\t\"name\": \"{{student_name}}\"\n}"
 						},
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/students",
+							"raw": "{{url_api}}/processor-app/api/students",
 							"host": [
-								"{{url.api}}"
+								"{{url_api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
 								"students"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST - Add students from CSV",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"url": {
-							"raw": "{{url.api}}/processor-app/api/students/load_from_csv",
-							"host": [
-								"{{url.api}}"
-							],
-							"path": [
-								"processor-app",
-								"api",
-								"students",
-								"load_from_csv"
 							]
 						}
 					},
@@ -124,18 +97,18 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"jonas doidao debas\"\n}"
+							"raw": "{\n\t\"name\": \"{{student_name}}\"\n}"
 						},
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/students/12",
+							"raw": "{{url_api}}/processor-app/api/students/{{student_registration_number}}",
 							"host": [
-								"{{url.api}}"
+								"{{url_api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
 								"students",
-								"12"
+								"{{student_registration_number}}"
 							]
 						}
 					},
@@ -147,16 +120,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/student/delete/12",
+							"raw": "{{url_api}}/processor-app/api/student/delete/{{student_name}}",
 							"host": [
-								"{{url.api}}"
+								"{{url_api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
 								"student",
 								"delete",
-								"12"
+								"{{student_name}}"
 							]
 						}
 					},
@@ -182,7 +155,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"transaction_id\": 4,\n    \"student_registration_number\": 3095564,\n    \"pan_final\": \"2123\",\n    \"amount\": 21.13,\n    \"description\": \"Transação teste\"\n}",
+							"raw": "{\n    \"transaction_id\": {{transaction_id}},\n    \"student_registration_number\": {{student_registration_number}},\n    \"pan_final\": \"2123\",\n    \"amount\": 21.13,\n    \"description\": \"Transação teste\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -190,15 +163,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/transaction/add",
+							"raw": "{{url_api}}/processor-app/api/transactions",
 							"host": [
-								"{{url.api}}"
+								"{{url_api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
-								"transaction",
-								"add"
+								"transactions"
 							]
 						}
 					},
@@ -210,15 +182,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/students/3095564/transactions",
+							"raw": "{{url_api}}/processor-app/api/students/{{student_registration_number}}/transactions",
 							"host": [
-								"{{url.api}}"
+								"{{url_api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
 								"students",
-								"3095564",
+								"{{student_registration_number}}",
 								"transactions"
 							]
 						}
@@ -231,15 +203,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url.api}}/processor-app/api/transactions/1",
+							"raw": "{{url_api}}/processor-app/api/transactions/{{transaction_id}}",
 							"host": [
-								"{{url.api}}"
+								"{{url_api}}"
 							],
 							"path": [
 								"processor-app",
 								"api",
 								"transactions",
-								"1"
+								"{{transaction_id}}"
 							]
 						}
 					},
@@ -247,6 +219,26 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "POST - Load from CSV - Students & Transactions",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url_api}}/processor-app/api/loader/load_from_csv",
+					"host": [
+						"{{url_api}}"
+					],
+					"path": [
+						"processor-app",
+						"api",
+						"loader",
+						"load_from_csv"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
