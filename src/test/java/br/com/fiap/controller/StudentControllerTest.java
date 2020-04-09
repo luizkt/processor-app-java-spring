@@ -4,7 +4,6 @@ import br.com.fiap.entity.Student;
 import br.com.fiap.service.StudentService;
 import br.com.fiap.service.TransactionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,24 +70,6 @@ public class StudentControllerTest {
         result = mockMvc.perform(MockMvcRequestBuilders.post("/students")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(student)))
-                .andExpect(status().is2xxSuccessful()).andReturn();
-
-        assertNotNull(result);
-        assertEquals(201, result.getResponse().getStatus());
-    }
-
-    @Test
-    public void givenStudentsCsvFile_whenRegisteringIt_shouldAddAllStudentsSuccessfully() throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-        String body = "{\"message\":\"Added all the students successfully\"}";
-
-        when(studentService.loadFromCsv()).thenReturn(new ResponseEntity<String>(body, headers, HttpStatus.CREATED));
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        result = mockMvc.perform(MockMvcRequestBuilders.post("/students/load_from_csv")
-                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful()).andReturn();
 
         assertNotNull(result);
