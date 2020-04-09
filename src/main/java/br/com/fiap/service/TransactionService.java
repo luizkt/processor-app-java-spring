@@ -4,6 +4,9 @@ import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
+import br.com.fiap.utils.ErrorResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Service
-@RequestMapping("/transaction")
+@Log4j2
 public class TransactionService {
 
     @Autowired
@@ -39,6 +42,10 @@ public class TransactionService {
             if (transactionRepository.existsById(transaction.getTransactionId()))
                 throw new Exception("\"Transaction ID already exist\"");
 
+            ObjectMapper mapper = new ObjectMapper();
+
+            log.info("Adding transaction: " + mapper.writeValueAsString(transaction));
+
             transactionRepository.save(transaction);
 
             HttpHeaders headers = new HttpHeaders();
@@ -48,16 +55,14 @@ public class TransactionService {
             return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
-
-            return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+            return ErrorResponse.build(e);
         }
     }
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<Transaction>> findAllTransactionsFromStudent(Integer studentRegistrationNumber) {
+
+        log.info("Searching for transactions from student registration number: " + studentRegistrationNumber);
 
         Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
 
@@ -73,10 +78,13 @@ public class TransactionService {
 
     @Transactional
     public ResponseEntity<String> deleteTransactionById(Integer transactionId) {
-
         try {
 
             Transaction transaction = transactionRepository.findTransactionByTransactionId(transactionId);
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            log.info("Deleting transaction: " + mapper.writeValueAsString(transaction));
 
             transactionRepository.deleteById(transaction.getTransactionId());
 
@@ -87,11 +95,7 @@ public class TransactionService {
             return new ResponseEntity<>(body, headers, HttpStatus.OK);
 
         } catch (Exception e) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
-
-            return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+            return ErrorResponse.build(e);
         }
 
     }

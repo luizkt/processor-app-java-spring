@@ -4,8 +4,8 @@ import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
+import br.com.fiap.utils.ErrorResponse;
 import br.com.fiap.utils.NameFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,11 +46,7 @@ public class LoaderService {
             return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
-
-            return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+            return ErrorResponse.build(e);
         }
     }
 
