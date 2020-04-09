@@ -5,6 +5,8 @@ import java.util.List;
 import br.com.fiap.entity.Student;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.utils.NameFormatter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudentService {
+
+    private static final Logger logger = LogManager.getLogger(StudentService.class);
 
     @Autowired
     private StudentRepository studentRepository;
@@ -34,12 +38,16 @@ public class StudentService {
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
             String body = "{\"message\":\"Added the student successfully\"}";
 
+            logger.info(body);
+
             return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
             String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
+
+            logger.error(e);
 
             return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
         }
@@ -64,12 +72,16 @@ public class StudentService {
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
             String body = "{\"message\":\"Updated the student successfully\"}";
 
+            logger.info(body);
+
             return new ResponseEntity<>(body, headers, HttpStatus.OK);
 
         } catch (Exception e) {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
             String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
+
+            logger.error(e);
 
             return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
         }
@@ -88,12 +100,16 @@ public class StudentService {
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
             String body = "{\"message\":\"Deleted the student successfully\"}";
 
+            logger.info(body);
+
             return new ResponseEntity<>(body, headers, HttpStatus.OK);
 
         } catch (Exception e) {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
             String body = "{\"message\":\"An error has occurred\", \"exception\":" + e.getMessage() + "}";
+
+            logger.error(e);
 
             return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
         }
@@ -102,11 +118,13 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public List<Student> findByName(String name) {
+        logger.info("Searching for student name");
         return studentRepository.findByName(name);
     }
 
     @Transactional(readOnly = true)
     public Student findByStudentRegistrationNumber(Integer studentRegistrationNumber) {
+        logger.info("Searching for student registration number");
         return studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
     }
 
