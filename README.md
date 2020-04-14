@@ -43,7 +43,7 @@ $ docker pull luizkt/processor-app-spring:latest
 
 ```sh
 $ docker run --name processor-app \
--e MYSQL_HOST=db \
+-e MYSQL_HOST=dbHost \
 -e MYSQL_ARGS="useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false" \
 -e MYSQL_DATABASE_NAME=processordb \
 -e MYSQL_APPLICATION_USER=processorUser \
@@ -52,14 +52,18 @@ $ docker run --name processor-app \
 -d luizkt/processor-app-spring:latest
 ```
 
+Os valores são apenas de exemplo, certifique-se que não existe nenhum bloqueio para se conectar ao banco de dados, 
+caso contrario o conteiner vai ficar em estado de falha. Para realizar os testes locais totalmente conteinerizado é
+recomendado a utilização do docker-compose.
+
 # Documentação de rotas
 
 Construimos um arquivo do postman com todas as rotas construidas para facilitar a utilização da API, os arquivos estão 
 dentro da pasta `postman_libs`.
  
- A documentação swagger pode ser consultada na URL: `~/processor-app/api/swagger-ui.html`
+ A documentação swagger pode ser consultada na URL: `~/processor-app/api/swagger-ui.html`.
  
  # Arquivo CSV para carregar massa inicial
  
  Utilizar a rota documentada `POST /processor-app/api/loader/load_from_csv` para carregar os estudantes e transações do 
- arquivo CSV  
+ arquivo CSV.
