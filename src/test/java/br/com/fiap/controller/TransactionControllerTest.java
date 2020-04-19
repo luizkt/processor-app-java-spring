@@ -1,5 +1,6 @@
 package br.com.fiap.controller;
 
+import br.com.fiap.entity.ResponseBody;
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.service.TransactionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,9 +54,10 @@ public class TransactionControllerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-        String body = "{\"message\":\"Added the transaction successfully\"}";
 
-        when(transactionService.add(Mockito.any(Transaction.class))).thenReturn(new ResponseEntity<String>(body, headers, HttpStatus.CREATED));
+        ResponseBody responseBody = new ResponseBody("Added the transaction successfully", transaction.toJsonString());
+
+        when(transactionService.add(Mockito.any(Transaction.class))).thenReturn(new ResponseEntity<String>(responseBody.toJsonString(), headers, HttpStatus.CREATED));
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -70,11 +72,16 @@ public class TransactionControllerTest {
 
     @Test
     public void givenRegisteredTransaction_whenDeletingIt_shouldRemoveFromRegistration() throws Exception {
+        Transaction transaction = new Transaction();
+
+        transaction.setTransactionId(111);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-        String body = "{\"message\":\"Deleted the transaction successfully\"}";
 
-        when(transactionService.deleteTransactionById(111)).thenReturn(new ResponseEntity<>(body, headers, HttpStatus.OK));
+        ResponseBody responseBody = new ResponseBody("Deleted the transaction successfully", transaction.toJsonString());
+
+        when(transactionService.deleteTransactionById(transaction.getTransactionId())).thenReturn(new ResponseEntity<>(responseBody.toJsonString(), headers, HttpStatus.OK));
 
         result = mockMvc.perform(MockMvcRequestBuilders.delete("/transactions/111")
                 .contentType(MediaType.APPLICATION_JSON))

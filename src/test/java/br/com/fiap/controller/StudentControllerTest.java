@@ -1,5 +1,6 @@
 package br.com.fiap.controller;
 
+import br.com.fiap.entity.ResponseBody;
 import br.com.fiap.entity.Student;
 import br.com.fiap.service.StudentService;
 import br.com.fiap.service.TransactionService;
@@ -22,7 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -61,9 +62,11 @@ public class StudentControllerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-        String body = "{\"message\":\"Added the student successfully\"}";
 
-        when(studentService.add(Mockito.any(Student.class))).thenReturn(new ResponseEntity<String>(body, headers, HttpStatus.CREATED));
+        ResponseBody responseBody = new ResponseBody("Added the student successfully", student.toJsonString());
+
+        when(studentService.add(Mockito.any(Student.class)))
+                .thenReturn(new ResponseEntity<>(responseBody.toJsonString(), headers, HttpStatus.CREATED));
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -83,9 +86,11 @@ public class StudentControllerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-        String body = "{\"message\":\"Updated the student successfully\"}";
 
-        when(studentService.updateStudentByStudentRegistrationNumber(Mockito.any(Student.class), eq(333000))).thenReturn(new ResponseEntity<>(body, headers, HttpStatus.OK));
+        ResponseBody responseBody = new ResponseBody("Updated the student successfully", student.toJsonString());
+
+        when(studentService.updateStudentByStudentRegistrationNumber(Mockito.any(Student.class), eq(333000)))
+                .thenReturn(new ResponseEntity<>(responseBody.toJsonString(), headers, HttpStatus.OK));
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -100,11 +105,15 @@ public class StudentControllerTest {
 
     @Test
     public void givenRegisteredStudent_whenDeletingHim_shouldRemoveFromRegistration() throws Exception {
+        Student student = new Student(333000, "Student Name");
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-        String body = "{\"message\":\"Deleted the student successfully\"}";
 
-        when(studentService.deleteStudentByStudentRegistrationNumber(333000)).thenReturn(new ResponseEntity<>(body, headers, HttpStatus.OK));
+        ResponseBody responseBody = new ResponseBody("Deleted the student successfully", student.toJsonString());
+
+        when(studentService.deleteStudentByStudentRegistrationNumber(student.getStudentRegistrationNumber()))
+                .thenReturn(new ResponseEntity<>(responseBody.toJsonString(), headers, HttpStatus.OK));
 
         result = mockMvc.perform(MockMvcRequestBuilders.delete("/students/333000")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -122,7 +131,14 @@ public class StudentControllerTest {
         students.add(new Student(222000, "Name 1"));
         students.add(new Student(333000, "Name 2"));
 
-        when(studentService.findByName(Mockito.anyString())).thenReturn(students);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+
+        List<String> studentsJsonString = new ArrayList<>();
+        students.forEach(student -> studentsJsonString.add(student.toJsonString()));
+        ResponseBody responseBody = new ResponseBody("Search for student's name successfully", studentsJsonString);
+
+        when(studentService.findByName(Mockito.anyString())).thenReturn(new ResponseEntity<>(responseBody.toJsonString(), headers, HttpStatus.OK));
 
         result = mockMvc.perform(MockMvcRequestBuilders.get("/students")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,21 +147,24 @@ public class StudentControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<LinkedHashMap> studentsReponse = mapper.readValue(result.getResponse().getContentAsString(), List.class);
+        ResponseBody resultResponseBody = mapper.readValue(result.getResponse().getContentAsString(), ResponseBody.class);
+        List<Student> resultStudents = Arrays.asList(mapper.convertValue(resultResponseBody.getData(), Student[].class));
 
         assertNotNull(result);
-        for(int index = 0; index < studentsReponse.size(); index++)
-            assertEquals("Name " + index,studentsReponse.get(index).get("name"));
-
         assertEquals(200, result.getResponse().getStatus());
-        assertEquals(3, studentsReponse.size());
+        assertEquals(3, resultStudents.size());
     }
 
     @Test
     public void givenRegisteredStudent_whenSearchingWithRegistrationNumber_shouldReturnStudent() throws Exception {
         Student student = new Student(111000, "Name");
 
-        when(studentService.findByStudentRegistrationNumber(111000)).thenReturn(student);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+
+        ResponseBody responseBody = new ResponseBody("Search for student's registration number successfully", student.toJsonString());
+
+        when(studentService.findByStudentRegistrationNumber(student.getStudentRegistrationNumber())).thenReturn(new ResponseEntity<>(responseBody.toJsonString(), headers, HttpStatus.OK));
 
         result = mockMvc.perform(MockMvcRequestBuilders.get("/students/111000")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -153,12 +172,13 @@ public class StudentControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        Student studentResponse = mapper.readValue(result.getResponse().getContentAsString(), Student.class);
+        ResponseBody resultResponseBody = mapper.readValue(result.getResponse().getContentAsString(), ResponseBody.class);
+        Student resultStudent = mapper.convertValue(resultResponseBody.getData(), Student.class);
 
         assertNotNull(result);
         assertEquals(200, result.getResponse().getStatus());
-        assertEquals(studentResponse.getName(), student.getName());
-        assertEquals(studentResponse.getStudentRegistrationNumber(), student.getStudentRegistrationNumber());
+        assertEquals(resultStudent.getName(), student.getName());
+        assertEquals(resultStudent.getStudentRegistrationNumber(), student.getStudentRegistrationNumber());
     }
 
 }

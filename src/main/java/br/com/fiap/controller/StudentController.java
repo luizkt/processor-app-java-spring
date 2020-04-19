@@ -1,18 +1,15 @@
 package br.com.fiap.controller;
 
 import br.com.fiap.entity.Student;
-import br.com.fiap.entity.Transaction;
 import br.com.fiap.service.StudentService;
 import br.com.fiap.service.TransactionService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class StudentController {
@@ -70,19 +67,19 @@ public class StudentController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public List<Student> findByName(@RequestParam String name) {
+    public ResponseEntity<String> findByName(@RequestParam String name) {
         return studentService.findByName(name);
     }
 
     @RequestMapping(value = "/students/{studentRegistrationNumber}", method = RequestMethod.GET)
     @ResponseBody
-    @ApiOperation(value = "Search for student studentby registration number")
+    @ApiOperation(value = "Search for student student by registration number")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Search for student by registration number"),
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public Student findByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
+    public ResponseEntity<String> findByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
         return studentService.findByStudentRegistrationNumber(studentRegistrationNumber);
     }
 
@@ -94,7 +91,7 @@ public class StudentController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<List<Transaction>> findAllTransactionsFromStudent(@PathVariable Integer studentRegistrationNumber) {
+    public ResponseEntity<String> findAllTransactionsFromStudent(@PathVariable Integer studentRegistrationNumber) {
         return transactionService.findAllTransactionsFromStudent(studentRegistrationNumber);
     }
 

@@ -1,14 +1,14 @@
 package br.com.fiap.service;
 
+import br.com.fiap.entity.ResponseBody;
 import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
 import br.com.fiap.utils.ErrorResponse;
 import br.com.fiap.utils.NameFormatter;
-import org.springframework.http.HttpHeaders;
+import br.com.fiap.utils.SuccessResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,12 +39,7 @@ public class LoaderService {
             studentRepository.saveAll(students);
             transactionRepository.saveAll(transactions);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-            String body = "{\"message\":\"Added all the students and transactions successfully\"}";
-
-            return new ResponseEntity<>(body, headers, HttpStatus.CREATED);
-
+            return SuccessResponse.build(new ResponseBody("Added all the students and transactions successfully", null), HttpStatus.CREATED);
         } catch (Exception e) {
             return ErrorResponse.build(e);
         }

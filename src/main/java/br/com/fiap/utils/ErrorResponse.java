@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Log4j2
 public class ErrorResponse {
@@ -15,6 +16,16 @@ public class ErrorResponse {
 
         log.error("Full stack trace:", exception);
 
-        return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(body, headers, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public static ResponseEntity<String> build(HttpClientErrorException exception, HttpStatus httpStatus) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
+        String body = "{\"message\":\"" + exception.getStatusText() + "\"}";
+
+        log.error("Full stack trace:", exception);
+
+        return new ResponseEntity<>(body, headers, httpStatus);
     }
 }
