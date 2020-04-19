@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 public class StudentTest {
 
     @Test
-    public void standartGettersSettersTest() throws Exception {
+    public void standardGettersSettersTest() throws Exception {
         PropertiesTester tester = new PropertiesTester();
 
         tester.testAll(Student.class);
