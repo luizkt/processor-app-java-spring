@@ -7,6 +7,7 @@ import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
 import br.com.fiap.utils.ErrorResponse;
 import br.com.fiap.utils.SuccessResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
 
     @Transactional
-    public ResponseEntity<String> add(Transaction transaction) {
+    public ResponseEntity<String> add(Transaction transaction) throws JsonProcessingException {
         try {
             if (transaction.getStudentRegistrationNumber() == null)
                 throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Student registration number is required");
@@ -49,7 +50,7 @@ public class TransactionService {
 
             transactionRepository.save(transaction);
 
-            return SuccessResponse.build(new ResponseBody("Added the transaction successfully", transaction.toJsonString()), HttpStatus.CREATED);
+            return SuccessResponse.build(new ResponseBody("Added the transaction successfully", transaction), HttpStatus.CREATED);
         } catch (HttpClientErrorException e) {
             return ErrorResponse.build(e, e.getStatusCode());
         } catch (Exception e) {
@@ -58,7 +59,7 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<String> findAllTransactionsFromStudent(Integer studentRegistrationNumber) {
+    public ResponseEntity<String> findAllTransactionsFromStudent(Integer studentRegistrationNumber) throws JsonProcessingException {
         try {
             log.info("Searching for transactions from student registration number: " + studentRegistrationNumber);
 
@@ -66,20 +67,21 @@ public class TransactionService {
 
             List<Transaction> transactions = transactionRepository.findAllTransactionsFromStudent(student);
 
-            List<String> transactionJsonString = new ArrayList<>();
-            transactions.forEach(transaction -> {
-                transaction.setStudentRegistrationNumber(transaction.getStudent().getStudentRegistrationNumber());
-                transactionJsonString.add(transaction.toJsonString());
-            });
+            if(transactions.size() == 0)
+                return SuccessResponse.build(new ResponseBody("No transactions found"), HttpStatus.NO_CONTENT);
 
-            return SuccessResponse.build(new ResponseBody("Search for the student's transaction successfully", transactionJsonString), HttpStatus.OK);
+            transactions.forEach(transaction -> transaction.setStudentRegistrationNumber(transaction.getStudent().getStudentRegistrationNumber()));
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            return SuccessResponse.build(new ResponseBody("Search for the student's transaction successfully", transactions), HttpStatus.OK);
         } catch (Exception e) {
             return ErrorResponse.build(e);
         }
     }
 
     @Transactional
-    public ResponseEntity<String> deleteTransactionById(Integer transactionId) {
+    public ResponseEntity<String> deleteTransactionById(Integer transactionId) throws JsonProcessingException {
         try {
             Transaction transaction = transactionRepository.findTransactionByTransactionId(transactionId);
 
@@ -89,7 +91,7 @@ public class TransactionService {
 
             transactionRepository.deleteById(transaction.getTransactionId());
 
-            return SuccessResponse.build(new ResponseBody("Deleted the transaction successfully", transaction.toJsonString()), HttpStatus.OK);
+            return SuccessResponse.build(new ResponseBody("Deleted the transaction successfully", transaction), HttpStatus.OK);
         } catch (Exception e) {
             return ErrorResponse.build(e);
         }

@@ -113,14 +113,4 @@ public class Transaction implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public String toJsonString() {
-        return "{" +
-                "\"transaction_id\":" + transactionId + "," +
-                "\"student_registration_number\":" + studentRegistrationNumber + "," +
-                "\"pan_final\":\"" + panFinal + "\"," +
-                "\"amount\":" + amount + "," +
-                "\"description\":\"" + description + "\"" +
-                "}";
-    }
 }

@@ -2,6 +2,7 @@ package br.com.fiap.controller;
 
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.service.TransactionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -27,7 +28,7 @@ public class TransactionController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<String> add(@Valid @RequestBody Transaction transaction) {
+    public ResponseEntity<String> add(@Valid @RequestBody Transaction transaction) throws JsonProcessingException {
         return transactionService.add(transaction);
     }
 
@@ -39,7 +40,7 @@ public class TransactionController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<String> deleteTransactionById(@PathVariable Integer transactionId) {
+    public ResponseEntity<String> deleteTransactionById(@PathVariable Integer transactionId) throws JsonProcessingException {
         return transactionService.deleteTransactionById(transactionId);
     }
 }

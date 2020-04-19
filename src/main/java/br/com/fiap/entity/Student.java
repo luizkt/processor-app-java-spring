@@ -46,11 +46,4 @@ public class Student implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String toJsonString() {
-        return "{" +
-                "\"student_registration_number\":" + studentRegistrationNumber + "," +
-                "\"name\":\"" + name + "\"" +
-                "}";
-    }
 }

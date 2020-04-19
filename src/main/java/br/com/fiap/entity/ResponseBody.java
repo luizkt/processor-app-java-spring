@@ -1,14 +1,34 @@
 package br.com.fiap.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.beans.ConstructorProperties;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseBody {
 
-    public ResponseBody(){};
+    public ResponseBody(){}
+
+    @ConstructorProperties({"message", "exception", "data"})
+    public ResponseBody(String message, String exception, Object data){
+        this.message = message;
+        this.exception = exception;
+        this.data = data;
+    };
+
+    public ResponseBody(String message){
+        this.message = message;
+    };
 
     public ResponseBody(String message, Object data){
         this.message = message;
         this.data = data;
+    };
+
+    public ResponseBody(String message, String exception){
+        this.message = message;
+        this.exception = exception;
     };
 
     @JsonProperty("message")
@@ -16,6 +36,9 @@ public class ResponseBody {
 
     @JsonProperty("data")
     private Object data;
+
+    @JsonProperty("exception")
+    private String exception;
 
     public String getMessage() {
         return message;
@@ -33,10 +56,11 @@ public class ResponseBody {
         this.data = data;
     }
 
-    public String toJsonString() {
-        return "{" +
-                "\"message\":\"" + message + "\"," +
-                "\"data\":" + data +
-                "}";
+    public String getException() {
+        return exception;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
     }
 }

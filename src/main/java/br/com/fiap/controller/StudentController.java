@@ -3,6 +3,7 @@ package br.com.fiap.controller;
 import br.com.fiap.entity.Student;
 import br.com.fiap.service.StudentService;
 import br.com.fiap.service.TransactionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -30,7 +31,7 @@ public class StudentController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<String> add(@Valid @RequestBody Student student) {
+    public ResponseEntity<String> add(@Valid @RequestBody Student student) throws JsonProcessingException {
         return studentService.add(student);
     }
 
@@ -43,7 +44,7 @@ public class StudentController {
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
     public ResponseEntity<String> updateStudentByStudentRegistrationNumber(@RequestBody Student studentUpdate,
-                                                                           @PathVariable Integer studentRegistrationNumber) {
+                                                                           @PathVariable Integer studentRegistrationNumber) throws JsonProcessingException {
         return studentService.updateStudentByStudentRegistrationNumber(studentUpdate,studentRegistrationNumber);
     }
 
@@ -55,7 +56,7 @@ public class StudentController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<String> deleteStudentByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
+    public ResponseEntity<String> deleteStudentByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) throws JsonProcessingException {
         return studentService.deleteStudentByStudentRegistrationNumber(studentRegistrationNumber);
     }
 
@@ -67,7 +68,7 @@ public class StudentController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<String> findByName(@RequestParam String name) {
+    public ResponseEntity<String> findByName(@RequestParam String name) throws JsonProcessingException {
         return studentService.findByName(name);
     }
 
@@ -79,7 +80,7 @@ public class StudentController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<String> findByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) {
+    public ResponseEntity<String> findByStudentRegistrationNumber(@PathVariable Integer studentRegistrationNumber) throws JsonProcessingException {
         return studentService.findByStudentRegistrationNumber(studentRegistrationNumber);
     }
 
@@ -91,7 +92,7 @@ public class StudentController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<String> findAllTransactionsFromStudent(@PathVariable Integer studentRegistrationNumber) {
+    public ResponseEntity<String> findAllTransactionsFromStudent(@PathVariable Integer studentRegistrationNumber) throws JsonProcessingException {
         return transactionService.findAllTransactionsFromStudent(studentRegistrationNumber);
     }
 

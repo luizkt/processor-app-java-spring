@@ -55,11 +55,11 @@ public class TransactionControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Added the transaction successfully", transaction.toJsonString());
-
-        when(transactionService.add(Mockito.any(Transaction.class))).thenReturn(new ResponseEntity<String>(responseBody.toJsonString(), headers, HttpStatus.CREATED));
+        ResponseBody responseBody = new ResponseBody("Added the transaction successfully", transaction);
 
         ObjectMapper mapper = new ObjectMapper();
+
+        when(transactionService.add(Mockito.any(Transaction.class))).thenReturn(new ResponseEntity<String>(mapper.writeValueAsString(responseBody), headers, HttpStatus.CREATED));
 
         result = mockMvc.perform(MockMvcRequestBuilders.post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -79,9 +79,11 @@ public class TransactionControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Deleted the transaction successfully", transaction.toJsonString());
+        ResponseBody responseBody = new ResponseBody("Deleted the transaction successfully", transaction);
 
-        when(transactionService.deleteTransactionById(transaction.getTransactionId())).thenReturn(new ResponseEntity<>(responseBody.toJsonString(), headers, HttpStatus.OK));
+        ObjectMapper mapper = new ObjectMapper();
+
+        when(transactionService.deleteTransactionById(transaction.getTransactionId())).thenReturn(new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, HttpStatus.OK));
 
         result = mockMvc.perform(MockMvcRequestBuilders.delete("/transactions/111")
                 .contentType(MediaType.APPLICATION_JSON))

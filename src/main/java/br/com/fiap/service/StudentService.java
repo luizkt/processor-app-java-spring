@@ -1,6 +1,5 @@
 package br.com.fiap.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.fiap.entity.ResponseBody;
@@ -9,6 +8,7 @@ import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.utils.ErrorResponse;
 import br.com.fiap.utils.NameFormatter;
 import br.com.fiap.utils.SuccessResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class StudentService {
     private StudentRepository studentRepository;
 
     @Transactional
-    public ResponseEntity<String> add(Student student) {
+    public ResponseEntity<String> add(Student student) throws JsonProcessingException {
 
         try {
             student.setName(NameFormatter.capitalizeName(student.getName()));
@@ -40,7 +40,7 @@ public class StudentService {
 
             studentRepository.save(student);
 
-            return SuccessResponse.build(new ResponseBody("Added the student successfully", student.toJsonString()), HttpStatus.CREATED);
+            return SuccessResponse.build(new ResponseBody("Added the student successfully", student), HttpStatus.CREATED);
         } catch (HttpClientErrorException e) {
             return ErrorResponse.build(e, e.getStatusCode());
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class StudentService {
     }
 
     @Transactional
-    public ResponseEntity<String> updateStudentByStudentRegistrationNumber(Student studentUpdate, Integer studentRegistrationNumber) {
+    public ResponseEntity<String> updateStudentByStudentRegistrationNumber(Student studentUpdate, Integer studentRegistrationNumber) throws JsonProcessingException {
         try {
             Student studentDatabase = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
 
@@ -66,7 +66,7 @@ public class StudentService {
 
             studentRepository.save(studentDatabase);
 
-            return SuccessResponse.build(new ResponseBody("Updated the student successfully", studentDatabase.toJsonString()), HttpStatus.OK);
+            return SuccessResponse.build(new ResponseBody("Updated the student successfully", studentDatabase), HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             return ErrorResponse.build(e, e.getStatusCode());
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class StudentService {
     }
 
     @Transactional
-    public ResponseEntity<String> deleteStudentByStudentRegistrationNumber(Integer studentRegistrationNumber) {
+    public ResponseEntity<String> deleteStudentByStudentRegistrationNumber(Integer studentRegistrationNumber) throws JsonProcessingException {
         try {
 
             Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
@@ -89,7 +89,7 @@ public class StudentService {
 
             studentRepository.deleteById(student.getStudentRegistrationNumber());
 
-            return SuccessResponse.build(new ResponseBody("Added the student successfully", student.toJsonString()), HttpStatus.OK);
+            return SuccessResponse.build(new ResponseBody("Added the student successfully", student), HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             return ErrorResponse.build(e, e.getStatusCode());
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<String> findByName(String name) {
+    public ResponseEntity<String> findByName(String name) throws JsonProcessingException {
         try{
             log.info("Searching for student name: " + name);
             List<Student> students = studentRepository.findByName(name);
@@ -106,17 +106,16 @@ public class StudentService {
             if(students.size() == 0)
                 return SuccessResponse.build(new ResponseBody("No student found", null), HttpStatus.NO_CONTENT);
 
-            List<String> studentJsonString = new ArrayList<>();
-            students.forEach(student -> studentJsonString.add(student.toJsonString()));
+            ObjectMapper mapper = new ObjectMapper();
 
-            return SuccessResponse.build(new ResponseBody("Search for student's name successfully", studentJsonString), HttpStatus.OK);
+            return SuccessResponse.build(new ResponseBody("Search for student's name successfully", students), HttpStatus.OK);
         } catch (Exception e) {
             return ErrorResponse.build(e);
         }
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<String> findByStudentRegistrationNumber(Integer studentRegistrationNumber) {
+    public ResponseEntity<String> findByStudentRegistrationNumber(Integer studentRegistrationNumber) throws JsonProcessingException {
         try {
             log.info("Searching for student registration number: " + studentRegistrationNumber);
             Student student = studentRepository.findByStudentRegistrationNumber(studentRegistrationNumber);
@@ -124,7 +123,9 @@ public class StudentService {
             if(student == null)
                 return SuccessResponse.build(new ResponseBody("No student found", null), HttpStatus.NO_CONTENT);
 
-            return SuccessResponse.build(new ResponseBody("Search for student's registration number successfully", student.toJsonString()), HttpStatus.OK);
+            ObjectMapper mapper = new ObjectMapper();
+
+            return SuccessResponse.build(new ResponseBody("Search for student's registration number successfully", student), HttpStatus.OK);
         } catch (Exception e) {
             return ErrorResponse.build(e);
         }

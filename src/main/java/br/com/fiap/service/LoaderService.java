@@ -8,6 +8,7 @@ import br.com.fiap.repository.TransactionRepository;
 import br.com.fiap.utils.ErrorResponse;
 import br.com.fiap.utils.NameFormatter;
 import br.com.fiap.utils.SuccessResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class LoaderService {
     }
 
     @Transactional()
-    public ResponseEntity<String> loadFromCsv() {
+    public ResponseEntity<String> loadFromCsv() throws JsonProcessingException {
         try {
             List<Student> students = csvReaderStudent();
             List<Transaction> transactions = csvReaderTransaction(students);
