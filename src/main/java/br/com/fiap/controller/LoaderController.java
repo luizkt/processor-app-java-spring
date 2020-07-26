@@ -1,6 +1,7 @@
 package br.com.fiap.controller;
 
 import br.com.fiap.service.LoaderService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -27,7 +28,7 @@ public class LoaderController {
             @ApiResponse(code = 400, message = "Some field have wrong information"),
             @ApiResponse(code = 500, message = "Some error occurred"),
     })
-    public ResponseEntity<String> loadFromCsv() {
+    public ResponseEntity<String> loadFromCsv() throws JsonProcessingException {
         return loaderService.loadFromCsv();
     }
 }

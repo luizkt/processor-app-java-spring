@@ -2,10 +2,12 @@ package br.com.fiap.service;
 
 import br.com.fiap.ProcessorApplication;
 import br.com.fiap.config.ProcessorMySqlContainer;
+import br.com.fiap.entity.ResponseBody;
 import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -19,8 +21,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -51,7 +56,7 @@ public class TransactionServiceIntegrationTest {
     }
 
     @Test
-    public void givenNewTransaction_whenRegisteringIt_shouldAddTransactionSuccessfully() {
+    public void givenNewTransaction_whenRegisteringIt_shouldAddTransactionSuccessfully() throws IOException {
         Transaction transaction = new Transaction(
                 2000,
                 mockStudent(),
@@ -62,19 +67,20 @@ public class TransactionServiceIntegrationTest {
         );
         ResponseEntity<String> response = transactionService.add(transaction);
 
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
+        Transaction transactionResponse = mapper.convertValue(responseBody.getData(), Transaction.class);
+
         assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertEquals(transaction.getTransactionId(), transactionResponse.getTransactionId());
+        assertEquals(transaction.getStudentRegistrationNumber(), transactionResponse.getStudentRegistrationNumber());
+        assertEquals(transaction.getPanFinal(), transactionResponse.getPanFinal());
+        assertEquals(transaction.getAmount(), transactionResponse.getAmount());
+        assertEquals(transaction.getDescription(), transactionResponse.getDescription());
     }
 
     @Test
-    public void givenRegisteredTransaction_whenRegisteringIt_shouldThrowExceptionForTransactionAlreadyExist() {
-        ResponseEntity<String> response = transactionService.add(mockTransaction());
-
-        assertTrue(response.getStatusCode().is4xxClientError());
-        assertTrue(response.getBody().contains("Transaction ID already exist"));
-    }
-
-    @Test
-    public void givenNotRegisteredStudent_whenRegisteringNewTransactionForHim_shouldThrowExceptionForNonStudent() {
+    public void givenNotRegisteredStudent_whenRegisteringNewTransactionForHim_shouldThrowExceptionForNonStudent() throws IOException {
         Transaction transaction = new Transaction(
                 1000,
                 new Student(222000, "Name 3"),
@@ -86,22 +92,50 @@ public class TransactionServiceIntegrationTest {
 
         ResponseEntity<String> response = transactionService.add(transaction);
 
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
+
         assertTrue(response.getStatusCode().is4xxClientError());
-        assertTrue(response.getBody().contains("Student registration number not found"));
+        assertTrue(responseBody.getMessage().equals("Student registration number not found"));
     }
 
     @Test
-    public void givenRegisteredStudent_whenSearchingForHisTransactions_shouldFindAllTransactionsFromStudent() {
-        ResponseEntity<List<Transaction>> response = transactionService.findAllTransactionsFromStudent(mockTransaction().getStudentRegistrationNumber());
+    public void givenRegisteredTransaction_whenRegisteringIt_shouldThrowExceptionForTransactionAlreadyExist() throws IOException {
+        ResponseEntity<String> response = transactionService.add(mockTransaction());
+
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
+
+        assertTrue(response.getStatusCode().is4xxClientError());
+        assertTrue(responseBody.getMessage().equals("Transaction ID already exist"));
+    }
+
+    @Test
+    public void givenRegisteredStudent_whenSearchingForHisTransactions_shouldFindAllTransactionsFromStudent() throws IOException {
+        ResponseEntity<String> response = transactionService.findAllTransactionsFromStudent(mockTransaction().getStudentRegistrationNumber());
+
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
+        List<Transaction> transactionResponse = Arrays.asList(mapper.convertValue(responseBody.getData(), Transaction[].class));
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertEquals(mockTransaction().getTransactionId(), transactionResponse.get(0).getTransactionId());
+        assertEquals(mockTransaction().getStudentRegistrationNumber(), transactionResponse.get(0).getStudentRegistrationNumber());
+        assertEquals(mockTransaction().getPanFinal(), transactionResponse.get(0).getPanFinal());
+        assertEquals(mockTransaction().getAmount(), transactionResponse.get(0).getAmount());
+        assertEquals(mockTransaction().getDescription(), transactionResponse.get(0).getDescription());
     }
 
     @Test
-    public void givenRegisteredTransaction_whenDeletingIt_shouldDeleteTheTransaction() {
+    public void givenRegisteredTransaction_whenDeletingIt_shouldDeleteTheTransaction() throws IOException {
         ResponseEntity<String> response = transactionService.deleteTransactionById(mockTransaction().getTransactionId());
 
+        ObjectMapper mapper = new ObjectMapper();
+        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
+        Transaction transactionResponse = mapper.convertValue(responseBody.getData(), Transaction.class);
+
         assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertEquals(mockTransaction().getTransactionId(), transactionResponse.getTransactionId());
     }
 
     private Student mockStudent() {
