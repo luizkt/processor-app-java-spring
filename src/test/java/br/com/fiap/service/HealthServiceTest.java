@@ -1,9 +1,9 @@
 package br.com.fiap.service;
 
 import br.com.fiap.ProcessorApplication;
+import br.com.fiap.service.impl.HealthServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class HealthServiceTest {
 
     @Autowired
-    HealthService healthService;
+    HealthServiceImpl healthService;
 
     @Test
     public void shouldReturnUPSuccessfully() {

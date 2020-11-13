@@ -2,6 +2,7 @@ package br.com.fiap.service;
 
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
+import br.com.fiap.service.impl.LoaderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,7 @@ public class LoaderServiceTest {
     @Mock
     TransactionRepository transactionRepository;
 
-    LoaderService service;
+    LoaderServiceImpl service;
 
     private MockMvc mockMvc;
 
@@ -35,7 +36,7 @@ public class LoaderServiceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        service = new LoaderService(studentRepository, transactionRepository);
+        service = new LoaderServiceImpl(studentRepository, transactionRepository);
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(service).build();
     }

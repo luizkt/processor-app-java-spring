@@ -17,7 +17,8 @@ public class SuccessResponse {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        log.info(mapper.writeValueAsString(responseBody));
+        log.info(responseBody.getMessage());
+        log.debug(mapper.writeValueAsString(responseBody));
 
         return new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, httpStatus);
     }

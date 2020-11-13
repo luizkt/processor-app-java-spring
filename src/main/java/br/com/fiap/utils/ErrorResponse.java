@@ -19,7 +19,8 @@ public class ErrorResponse {
 
         ResponseBody responseBody = new ResponseBody("An error has occurred", exception.getMessage());
 
-        log.error("Full stack trace:", exception);
+        log.error(exception.getMessage());
+        log.debug("Full stack trace:", exception);
 
         return new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -31,7 +32,8 @@ public class ErrorResponse {
 
         ResponseBody responseBody = new ResponseBody(exception.getStatusText());
 
-        log.error("Full stack trace:", exception);
+        log.error(exception.getMessage());
+        log.debug("Full stack trace:", exception);
 
         return new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, httpStatus);
     }
