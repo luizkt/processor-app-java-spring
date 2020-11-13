@@ -46,7 +46,7 @@ public class LoaderService {
         }
     }
 
-    List<Student> csvReaderStudent() throws IOException {
+    private List<Student> csvReaderStudent() throws IOException {
         List<Student> students = new ArrayList<>();
 
         BufferedReader csvReader = new BufferedReader(new FileReader("./files/students_list.csv"));
