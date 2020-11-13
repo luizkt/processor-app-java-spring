@@ -2,7 +2,7 @@ package br.com.fiap.controller;
 
 import br.com.fiap.entity.ResponseBody;
 import br.com.fiap.entity.Transaction;
-import br.com.fiap.service.TransactionService;
+import br.com.fiap.service.impl.TransactionServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TransactionControllerTest {
 
     @Mock
-    private TransactionService transactionService;
+    private TransactionServiceImpl transactionService;
 
     private MvcResult result;
 

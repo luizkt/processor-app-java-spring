@@ -2,8 +2,8 @@ package br.com.fiap.controller;
 
 import br.com.fiap.entity.ResponseBody;
 import br.com.fiap.entity.Student;
-import br.com.fiap.service.StudentService;
-import br.com.fiap.service.TransactionService;
+import br.com.fiap.service.impl.StudentServiceImpl;
+import br.com.fiap.service.impl.TransactionServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,10 +36,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StudentControllerTest {
 
     @Mock
-    private StudentService studentService;
+    private StudentServiceImpl studentService;
 
     @Mock
-    private TransactionService transactionService;
+    private TransactionServiceImpl transactionService;
 
     private MvcResult result;
 

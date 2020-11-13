@@ -4,15 +4,13 @@ import br.com.fiap.ProcessorApplication;
 import br.com.fiap.config.ProcessorMySqlContainer;
 import br.com.fiap.entity.ResponseBody;
 import br.com.fiap.entity.Student;
-import br.com.fiap.entity.Transaction;
 import br.com.fiap.repository.StudentRepository;
-import br.com.fiap.repository.TransactionRepository;
+import br.com.fiap.service.impl.StudentServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +35,7 @@ public class StudentServiceIntegrationTest {
     public static MySQLContainer processorMySqlContainer = ProcessorMySqlContainer.getInstance();
 
     @Autowired
-    private StudentService studentService;
+    private StudentServiceImpl studentService;
 
     @Autowired
     private StudentRepository studentRepository;

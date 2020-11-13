@@ -1,6 +1,6 @@
 package br.com.fiap.controller;
 
-import br.com.fiap.service.HealthService;
+import br.com.fiap.service.impl.HealthServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class HealthControllerTest {
 
     @Mock
-    HealthService healthService;
+    HealthServiceImpl healthService;
 
     private MvcResult result;
 
