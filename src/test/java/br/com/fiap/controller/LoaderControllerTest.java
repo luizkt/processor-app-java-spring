@@ -1,6 +1,6 @@
 package br.com.fiap.controller;
 
-import br.com.fiap.service.LoaderService;
+import br.com.fiap.service.impl.LoaderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class LoaderControllerTest {
 
     @Mock
-    private LoaderService loaderService;
+    private LoaderServiceImpl loaderService;
 
     private MvcResult result;
 
