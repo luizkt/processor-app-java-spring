@@ -2,9 +2,10 @@ package br.com.fiap.service;
 
 import br.com.fiap.ProcessorApplication;
 import br.com.fiap.config.ProcessorMySqlContainer;
-import br.com.fiap.entity.ResponseBody;
+import br.com.fiap.entity.ApplicationResponseBody;
 import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
+import br.com.fiap.exception.BusinessException;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
 import br.com.fiap.service.impl.TransactionServiceImpl;
@@ -65,13 +66,11 @@ public class TransactionServiceIntegrationTest {
                 1.00,
                 "Transaction description"
         );
-        ResponseEntity<String> response = transactionService.add(transaction);
+        ApplicationResponseBody response = transactionService.add(transaction);
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Transaction transactionResponse = mapper.convertValue(responseBody.getData(), Transaction.class);
+        Transaction transactionResponse = mapper.convertValue(response.getData(), Transaction.class);
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
         assertEquals(transaction.getTransactionId(), transactionResponse.getTransactionId());
         assertEquals(transaction.getStudentRegistrationNumber(), transactionResponse.getStudentRegistrationNumber());
         assertEquals(transaction.getPanFinal(), transactionResponse.getPanFinal());
@@ -79,7 +78,7 @@ public class TransactionServiceIntegrationTest {
         assertEquals(transaction.getDescription(), transactionResponse.getDescription());
     }
 
-    @Test
+    @Test(expected = BusinessException.class)
     public void givenNotRegisteredStudent_whenRegisteringNewTransactionForHim_shouldThrowExceptionForNonStudent() throws IOException {
         Transaction transaction = new Transaction(
                 1000,
@@ -90,35 +89,27 @@ public class TransactionServiceIntegrationTest {
                 "Transaction description"
         );
 
-        ResponseEntity<String> response = transactionService.add(transaction);
+        ApplicationResponseBody response = transactionService.add(transaction);
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
 
-        assertTrue(response.getStatusCode().is4xxClientError());
-        assertTrue(responseBody.getMessage().equals("Student registration number not found"));
+        assertTrue(response.getMessage().equals("Student registration number not found"));
     }
 
-    @Test
+    @Test(expected = BusinessException.class)
     public void givenRegisteredTransaction_whenRegisteringIt_shouldThrowExceptionForTransactionAlreadyExist() throws IOException {
-        ResponseEntity<String> response = transactionService.add(mockTransaction());
+        ApplicationResponseBody response = transactionService.add(mockTransaction());
 
-        ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-
-        assertTrue(response.getStatusCode().is4xxClientError());
-        assertTrue(responseBody.getMessage().equals("Transaction ID already exist"));
+        assertTrue(response.getMessage().equals("Transaction ID already exist"));
     }
 
     @Test
     public void givenRegisteredStudent_whenSearchingForHisTransactions_shouldFindAllTransactionsFromStudent() throws IOException {
-        ResponseEntity<String> response = transactionService.findAllTransactionsFromStudent(mockTransaction().getStudentRegistrationNumber());
+        ApplicationResponseBody response = transactionService.findAllTransactionsFromStudent(mockTransaction().getStudentRegistrationNumber());
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        List<Transaction> transactionResponse = Arrays.asList(mapper.convertValue(responseBody.getData(), Transaction[].class));
+        List<Transaction> transactionResponse = Arrays.asList(mapper.convertValue(response.getData(), Transaction[].class));
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
         assertEquals(mockTransaction().getTransactionId(), transactionResponse.get(0).getTransactionId());
         assertEquals(mockTransaction().getStudentRegistrationNumber(), transactionResponse.get(0).getStudentRegistrationNumber());
         assertEquals(mockTransaction().getPanFinal(), transactionResponse.get(0).getPanFinal());
@@ -128,13 +119,11 @@ public class TransactionServiceIntegrationTest {
 
     @Test
     public void givenRegisteredTransaction_whenDeletingIt_shouldDeleteTheTransaction() throws IOException {
-        ResponseEntity<String> response = transactionService.deleteTransactionById(mockTransaction().getTransactionId());
+        ApplicationResponseBody response = transactionService.deleteTransactionById(mockTransaction().getTransactionId());
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Transaction transactionResponse = mapper.convertValue(responseBody.getData(), Transaction.class);
+        Transaction transactionResponse = mapper.convertValue(response.getData(), Transaction.class);
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
         assertEquals(mockTransaction().getTransactionId(), transactionResponse.getTransactionId());
     }
 

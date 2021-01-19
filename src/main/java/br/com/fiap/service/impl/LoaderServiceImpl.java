@@ -1,18 +1,13 @@
 package br.com.fiap.service.impl;
 
-import br.com.fiap.entity.ResponseBody;
+import br.com.fiap.entity.ApplicationResponseBody;
 import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
 import br.com.fiap.service.LoaderService;
-import br.com.fiap.utils.ErrorResponse;
 import br.com.fiap.utils.NameFormatter;
-import br.com.fiap.utils.SuccessResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +23,7 @@ public class LoaderServiceImpl implements LoaderService {
 
     private final StudentRepository studentRepository;
     private final TransactionRepository transactionRepository;
+    private final String logPrefix = "[Service] [Loader]";
 
     public LoaderServiceImpl(StudentRepository studentRepository, TransactionRepository transactionRepository) {
         this.studentRepository = studentRepository;
@@ -36,27 +32,28 @@ public class LoaderServiceImpl implements LoaderService {
 
     @Transactional()
     @Override
-    public ResponseEntity<String> loadFromCsv() throws JsonProcessingException {
+    public ApplicationResponseBody loadFromCsv() throws IOException {
         try {
-            log.info("Reading students from file");
+            log.info(logPrefix + " Reading students from file");
             List<Student> students = csvReaderStudent();
-            log.info("Student's file read successfully");
+            log.info(logPrefix + " Student's file read successfully");
 
-            log.info("Reading transactions from file");
+            log.info(logPrefix + " Reading transactions from file");
             List<Transaction> transactions = csvReaderTransaction(students);
-            log.info("Transaction's file read successfully");
+            log.info(logPrefix + " Transaction's file read successfully");
 
-            log.info("Adding all student's to the database");
+            log.info(logPrefix + " Adding all student's to the database");
             studentRepository.saveAll(students);
-            log.info("Added all student's successfully");
+            log.info(logPrefix + " Added all student's successfully");
 
-            log.info("Adding all transaction's to the database");
+            log.info(logPrefix + " Adding all transaction's to the database");
             transactionRepository.saveAll(transactions);
-            log.info("Added all transaction's successfully");
+            log.info(logPrefix + " Added all transaction's successfully");
 
-            return SuccessResponse.build(new ResponseBody("Added all the students and transactions successfully", null), HttpStatus.CREATED);
+            return new ApplicationResponseBody(logPrefix + " Added all the students and transactions successfully", null);
         } catch (Exception e) {
-            return ErrorResponse.build(e);
+            log.error(logPrefix + " " + e.getMessage());
+            throw e;
         }
     }
 

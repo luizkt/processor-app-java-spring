@@ -6,27 +6,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.beans.ConstructorProperties;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResponseBody {
+public class ApplicationResponseBody {
 
-    public ResponseBody(){}
+    public ApplicationResponseBody(){}
 
     @ConstructorProperties({"message", "exception", "data"})
-    public ResponseBody(String message, String exception, Object data){
+    public ApplicationResponseBody(String message, String exception, Object data){
         this.message = message;
         this.exception = exception;
         this.data = data;
     };
 
-    public ResponseBody(String message){
+    public ApplicationResponseBody(String message){
         this.message = message;
     };
 
-    public ResponseBody(String message, Object data){
+    public ApplicationResponseBody(String message, Object data){
         this.message = message;
         this.data = data;
     };
 
-    public ResponseBody(String message, String exception){
+    public ApplicationResponseBody(String message, String exception){
         this.message = message;
         this.exception = exception;
     };

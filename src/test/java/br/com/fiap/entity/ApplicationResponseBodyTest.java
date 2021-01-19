@@ -5,12 +5,12 @@ import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles({"test"})
-public class ResponseBodyTest {
+public class ApplicationResponseBodyTest {
 
         @Test
         public void standardGettersSettersTest() throws Exception {
             PropertiesTester tester = new PropertiesTester();
 
-            tester.testAll(ResponseBody.class);
+            tester.testAll(ApplicationResponseBody.class);
         }
 }
