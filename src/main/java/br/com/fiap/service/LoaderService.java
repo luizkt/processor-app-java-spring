@@ -1,8 +1,9 @@
 package br.com.fiap.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.http.ResponseEntity;
+import br.com.fiap.entity.ApplicationResponseBody;
+
+import java.io.IOException;
 
 public interface LoaderService {
-    ResponseEntity<String> loadFromCsv() throws JsonProcessingException;
+    ApplicationResponseBody loadFromCsv() throws IOException;
 }

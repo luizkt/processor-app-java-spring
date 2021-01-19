@@ -1,22 +1,21 @@
 package br.com.fiap.service.impl;
 
-import br.com.fiap.entity.ResponseBody;
+import br.com.fiap.entity.ApplicationResponseBody;
 import br.com.fiap.entity.Student;
 import br.com.fiap.entity.Transaction;
+import br.com.fiap.exception.BusinessException;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
 import br.com.fiap.service.TransactionService;
-import br.com.fiap.utils.ErrorResponse;
-import br.com.fiap.utils.SuccessResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
+
+import static br.com.fiap.utils.Message.*;
 
 @Service
 @Log4j2
@@ -25,6 +24,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final StudentRepository studentRepository;
     private final TransactionRepository transactionRepository;
 
+    private final String logPrefix = "[Service] [Transaction]";
+
     public TransactionServiceImpl(StudentRepository studentRepository, TransactionRepository transactionRepository) {
         this.studentRepository = studentRepository;
         this.transactionRepository = transactionRepository;
@@ -32,38 +33,40 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public ResponseEntity<String> add(Transaction transaction) throws JsonProcessingException {
+    public ApplicationResponseBody add(Transaction transaction) throws JsonProcessingException {
         try {
-            log.info("Adding transaction");
+            log.info(logPrefix + " Adding transaction");
 
             if (transaction.getStudentRegistrationNumber() == null)
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Student registration number is required");
+                throw new BusinessException(HttpStatus.BAD_REQUEST, STUDENT_REGISTRATION_NUMBER_REQUIRED);
 
             transaction.setStudent(studentRepository.findByStudentRegistrationNumber(transaction.getStudentRegistrationNumber()));
 
             if (transaction.getStudent() == null)
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Student registration number not found");
+                throw new BusinessException(HttpStatus.BAD_REQUEST, STUDENT_DOES_NOT_EXIST);
 
             if (transactionRepository.existsById(transaction.getTransactionId()))
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Transaction ID already exist");
+                throw new BusinessException(HttpStatus.BAD_REQUEST, TRANSACTION_ALREADY_REGISTERED);
 
             ObjectMapper mapper = new ObjectMapper();
 
-            log.debug("Adding transaction: " + mapper.writeValueAsString(transaction));
+            log.debug(logPrefix + " Adding transaction: " + mapper.writeValueAsString(transaction));
 
             transactionRepository.save(transaction);
 
-            return SuccessResponse.build(new ResponseBody("Added the transaction successfully", transaction), HttpStatus.CREATED);
-        } catch (HttpClientErrorException e) {
-            return ErrorResponse.build(e, e.getStatusCode());
+            return new ApplicationResponseBody(TRANSACTION_ADDED_SUCCESSFULLY, transaction);
+        } catch (BusinessException e) {
+            log.error(logPrefix + " " + e.getMessage());
+            throw e;
         } catch (Exception e) {
-            return ErrorResponse.build(e);
+            log.error(logPrefix + " " + e.getMessage());
+            throw e;
         }
     }
 
     @Transactional(readOnly = true)
     @Override
-    public ResponseEntity<String> findAllTransactionsFromStudent(Integer studentRegistrationNumber) throws JsonProcessingException {
+    public ApplicationResponseBody findAllTransactionsFromStudent(Integer studentRegistrationNumber) throws JsonProcessingException {
         try {
             log.info("Searching transactions");
             log.debug("Searching transactions from student registration number [" + studentRegistrationNumber + "]");
@@ -73,19 +76,20 @@ public class TransactionServiceImpl implements TransactionService {
             List<Transaction> transactions = transactionRepository.findAllTransactionsFromStudent(student);
 
             if(transactions.size() == 0)
-                return SuccessResponse.build(new ResponseBody("No transactions found"), HttpStatus.NO_CONTENT);
+                return new ApplicationResponseBody(TRANSACTION_NOT_FOUND);
 
             transactions.forEach(transaction -> transaction.setStudentRegistrationNumber(transaction.getStudent().getStudentRegistrationNumber()));
 
-            return SuccessResponse.build(new ResponseBody("Search for the student's transaction successfully", transactions), HttpStatus.OK);
+            return new ApplicationResponseBody(FOUND_TRANSACTION_FROM_STUDENT, transactions);
         } catch (Exception e) {
-            return ErrorResponse.build(e);
+            log.error(logPrefix + " " + e.getMessage());
+            throw e;
         }
     }
 
     @Transactional
     @Override
-    public ResponseEntity<String> deleteTransactionById(Integer transactionId) throws JsonProcessingException {
+    public ApplicationResponseBody deleteTransactionById(Integer transactionId) throws JsonProcessingException {
         try {
             log.info("Deleting transaction");
 
@@ -97,9 +101,10 @@ public class TransactionServiceImpl implements TransactionService {
 
             transactionRepository.deleteById(transaction.getTransactionId());
 
-            return SuccessResponse.build(new ResponseBody("Deleted the transaction successfully", transaction), HttpStatus.OK);
+            return new ApplicationResponseBody(TRANSACTION_DELETED_SUCCESSFULLY, transaction);
         } catch (Exception e) {
-            return ErrorResponse.build(e);
+            log.error(logPrefix + " " + e.getMessage());
+            throw e;
         }
     }
 }

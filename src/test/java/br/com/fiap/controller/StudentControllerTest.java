@@ -1,6 +1,6 @@
 package br.com.fiap.controller;
 
-import br.com.fiap.entity.ResponseBody;
+import br.com.fiap.entity.ApplicationResponseBody;
 import br.com.fiap.entity.Student;
 import br.com.fiap.service.impl.StudentServiceImpl;
 import br.com.fiap.service.impl.TransactionServiceImpl;
@@ -63,12 +63,12 @@ public class StudentControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Added the student successfully", student);
+        ApplicationResponseBody applicationResponseBody = new ApplicationResponseBody("Added the student successfully", student);
 
         ObjectMapper mapper = new ObjectMapper();
 
         when(studentService.add(Mockito.any(Student.class)))
-                .thenReturn(new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, HttpStatus.CREATED));
+                .thenReturn(applicationResponseBody);
 
         result = mockMvc.perform(MockMvcRequestBuilders.post("/students")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,12 +87,12 @@ public class StudentControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Updated the student successfully", student);
+        ApplicationResponseBody applicationResponseBody = new ApplicationResponseBody("Updated the student successfully", student);
 
         ObjectMapper mapper = new ObjectMapper();
 
         when(studentService.updateStudentByStudentRegistrationNumber(Mockito.any(Student.class), eq(333000)))
-                .thenReturn(new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, HttpStatus.OK));
+                .thenReturn(applicationResponseBody);
 
         result = mockMvc.perform(MockMvcRequestBuilders.patch("/students/333000")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -110,12 +110,12 @@ public class StudentControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Deleted the student successfully", student);
+        ApplicationResponseBody applicationResponseBody = new ApplicationResponseBody("Deleted the student successfully", student);
 
         ObjectMapper mapper = new ObjectMapper();
 
         when(studentService.deleteStudentByStudentRegistrationNumber(student.getStudentRegistrationNumber()))
-                .thenReturn(new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, HttpStatus.OK));
+                .thenReturn(applicationResponseBody);
 
         result = mockMvc.perform(MockMvcRequestBuilders.delete("/students/333000")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -136,19 +136,19 @@ public class StudentControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Search for student's name successfully", students);
+        ApplicationResponseBody applicationResponseBody = new ApplicationResponseBody("Search for student's name successfully", students);
 
         ObjectMapper mapper = new ObjectMapper();
 
-        when(studentService.findByName(Mockito.anyString())).thenReturn(new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, HttpStatus.OK));
+        when(studentService.findByName(Mockito.anyString())).thenReturn(applicationResponseBody);
 
         result = mockMvc.perform(MockMvcRequestBuilders.get("/students")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("name", "Name"))
                 .andExpect(status().is2xxSuccessful()).andReturn();
 
-        ResponseBody resultResponseBody = mapper.readValue(result.getResponse().getContentAsString(), ResponseBody.class);
-        List<Student> resultStudents = Arrays.asList(mapper.convertValue(resultResponseBody.getData(), Student[].class));
+        ApplicationResponseBody resultApplicationResponseBody = mapper.readValue(result.getResponse().getContentAsString(), ApplicationResponseBody.class);
+        List<Student> resultStudents = Arrays.asList(mapper.convertValue(resultApplicationResponseBody.getData(), Student[].class));
 
         assertNotNull(result);
         assertEquals(200, result.getResponse().getStatus());
@@ -162,19 +162,19 @@ public class StudentControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Search for student's registration number successfully", student);
+        ApplicationResponseBody applicationResponseBody = new ApplicationResponseBody("Search for student's registration number successfully", student);
 
         ObjectMapper mapper = new ObjectMapper();
 
         when(studentService.findByStudentRegistrationNumber(student.getStudentRegistrationNumber()))
-                .thenReturn(new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, HttpStatus.OK));
+                .thenReturn( applicationResponseBody);
 
         result = mockMvc.perform(MockMvcRequestBuilders.get("/students/111000")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful()).andReturn();
 
-        ResponseBody resultResponseBody = mapper.readValue(result.getResponse().getContentAsString(), ResponseBody.class);
-        Student resultStudent = mapper.convertValue(resultResponseBody.getData(), Student.class);
+        ApplicationResponseBody resultApplicationResponseBody = mapper.readValue(result.getResponse().getContentAsString(), ApplicationResponseBody.class);
+        Student resultStudent = mapper.convertValue(resultApplicationResponseBody.getData(), Student.class);
 
         assertNotNull(result);
         assertEquals(200, result.getResponse().getStatus());

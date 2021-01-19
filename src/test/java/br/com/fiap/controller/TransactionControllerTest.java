@@ -1,6 +1,6 @@
 package br.com.fiap.controller;
 
-import br.com.fiap.entity.ResponseBody;
+import br.com.fiap.entity.ApplicationResponseBody;
 import br.com.fiap.entity.Transaction;
 import br.com.fiap.service.impl.TransactionServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,11 +55,12 @@ public class TransactionControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Added the transaction successfully", transaction);
+        ApplicationResponseBody applicationResponseBody = new ApplicationResponseBody("Added the transaction successfully", transaction);
 
         ObjectMapper mapper = new ObjectMapper();
 
-        when(transactionService.add(Mockito.any(Transaction.class))).thenReturn(new ResponseEntity<String>(mapper.writeValueAsString(responseBody), headers, HttpStatus.CREATED));
+        when(transactionService.add(Mockito.any(Transaction.class)))
+                .thenReturn(applicationResponseBody);
 
         result = mockMvc.perform(MockMvcRequestBuilders.post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -79,11 +80,12 @@ public class TransactionControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        ResponseBody responseBody = new ResponseBody("Deleted the transaction successfully", transaction);
+        ApplicationResponseBody applicationResponseBody = new ApplicationResponseBody("Deleted the transaction successfully", transaction);
 
         ObjectMapper mapper = new ObjectMapper();
 
-        when(transactionService.deleteTransactionById(transaction.getTransactionId())).thenReturn(new ResponseEntity<>(mapper.writeValueAsString(responseBody), headers, HttpStatus.OK));
+        when(transactionService.deleteTransactionById(transaction.getTransactionId()))
+                .thenReturn(applicationResponseBody);
 
         result = mockMvc.perform(MockMvcRequestBuilders.delete("/transactions/111")
                 .contentType(MediaType.APPLICATION_JSON))

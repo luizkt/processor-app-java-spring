@@ -1,5 +1,6 @@
 package br.com.fiap.service;
 
+import br.com.fiap.entity.ApplicationResponseBody;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.repository.TransactionRepository;
 import br.com.fiap.service.impl.LoaderServiceImpl;
@@ -43,9 +44,8 @@ public class LoaderServiceTest {
 
     @Test
     public void givenStudentCsvFile_whenReadingIt_shouldReturnListOfStudents() throws IOException {
-        ResponseEntity<String> response = service.loadFromCsv();
+        ApplicationResponseBody response = service.loadFromCsv();
 
         assertNotNull(response);
-        assertEquals(201, response.getStatusCodeValue());
     }
 }

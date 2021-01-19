@@ -2,8 +2,9 @@ package br.com.fiap.service;
 
 import br.com.fiap.ProcessorApplication;
 import br.com.fiap.config.ProcessorMySqlContainer;
-import br.com.fiap.entity.ResponseBody;
+import br.com.fiap.entity.ApplicationResponseBody;
 import br.com.fiap.entity.Student;
+import br.com.fiap.exception.BusinessException;
 import br.com.fiap.repository.StudentRepository;
 import br.com.fiap.service.impl.StudentServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,69 +50,56 @@ public class StudentServiceIntegrationTest {
     @Test
     public void givenNewStudent_whenRegisteringHim_shouldRegisterNewStudent() throws IOException {
 
-        ResponseEntity<String> response = studentService.add(new Student(111000, "New Student Name"));
+        ApplicationResponseBody response = studentService.add(new Student(111000, "New Student Name"));
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Student student = mapper.convertValue(responseBody.getData(), Student.class);
+        Student student = mapper.convertValue(response.getData(), Student.class);
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
         assertEquals("New Student Name", student.getName());
     }
 
-    @Test
+    @Test(expected = BusinessException.class)
     public void givenRegisteredStudent_whenRegisteringHim_shouldThrowAnError() throws IOException {
 
-        ResponseEntity<String> response = studentService.add(mockStudent());
+        ApplicationResponseBody response = studentService.add(mockStudent());
 
-        ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Student student = mapper.convertValue(responseBody.getData(), Student.class);
-
-        assertTrue(response.getStatusCode().is4xxClientError());
-        assertTrue(responseBody.getMessage().equals("Student registration number already exist"));
+        assertTrue(response.getMessage().equals("Student registration number already exist"));
     }
 
     @Test
     public void givenRegisteredStudent_whenUpdatingHim_shouldUpdateStudentSuccessfully() throws IOException {
 
-        ResponseEntity<String> response = studentService.updateStudentByStudentRegistrationNumber(new Student(
+        ApplicationResponseBody response = studentService.updateStudentByStudentRegistrationNumber(new Student(
                 mockStudent().getStudentRegistrationNumber(),
                 "New Name"
         ), mockStudent().getStudentRegistrationNumber());
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Student student = mapper.convertValue(responseBody.getData(), Student.class);
+        Student student = mapper.convertValue(response.getData(), Student.class);
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
         assertEquals("New Name", student.getName());
     }
 
-    @Test
+    @Test(expected = BusinessException.class)
     public void givenNotRegisteredStudent_whenUpdatingHim_shouldThrowAnError() throws IOException {
 
-        ResponseEntity<String> response = studentService.updateStudentByStudentRegistrationNumber(new Student(
+        ApplicationResponseBody response = studentService.updateStudentByStudentRegistrationNumber(new Student(
                 123123,
                 "New Name"
         ), 123123);
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Student student = mapper.convertValue(responseBody.getData(), Student.class);
 
-        assertTrue(response.getStatusCode().is4xxClientError());
-        assertTrue(responseBody.getMessage().equals("Student registration number doesn't exist"));
+        assertTrue(response.getMessage().equals("Student registration number doesn't exist"));
     }
 
     @Test
     public void givenRegisteredStudent_whenSearchingByHisName_shouldFindStudentSuccessfully() throws IOException {
 
-        ResponseEntity<String> response = studentService.findByName(mockStudent().getName());
+        ApplicationResponseBody response = studentService.findByName(mockStudent().getName());
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        List<Student> students = Arrays.asList(mapper.convertValue(responseBody.getData(), Student[].class));
+        List<Student> students = Arrays.asList(mapper.convertValue(response.getData(), Student[].class));
 
         assertEquals(mockStudent().getName(), students.get(0).getName());
     }
@@ -119,40 +107,28 @@ public class StudentServiceIntegrationTest {
     @Test
     public void givenRegisteredStudent_whenSearchingByHisRegisterNumber_shouldFindStudentSuccessfully() throws IOException {
 
-        ResponseEntity<String> response = studentService.findByStudentRegistrationNumber(mockStudent().getStudentRegistrationNumber());
+        ApplicationResponseBody response = studentService.findByStudentRegistrationNumber(mockStudent().getStudentRegistrationNumber());
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Student student = mapper.convertValue(responseBody.getData(), Student.class);
+        Student student = mapper.convertValue(response.getData(), Student.class);
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
         assertEquals(mockStudent().getStudentRegistrationNumber(), student.getStudentRegistrationNumber());
     }
 
     @Test
     public void givenRegisteredStudent_whenDeletingHim_shouldDeleteStudentSuccessfully() throws IOException {
 
-        ResponseEntity<String> response = studentService.deleteStudentByStudentRegistrationNumber(mockStudent().getStudentRegistrationNumber());
+        ApplicationResponseBody response = studentService.deleteStudentByStudentRegistrationNumber(mockStudent().getStudentRegistrationNumber());
 
         ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Student student = mapper.convertValue(responseBody.getData(), Student.class);
+        Student student = mapper.convertValue(response.getData(), Student.class);
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
         assertEquals(mockStudent().getStudentRegistrationNumber(), student.getStudentRegistrationNumber());
     }
 
-    @Test
+    @Test(expected = BusinessException.class)
     public void givenNotRegisteredStudent_whenDeletingHim_shouldThrowAnError() throws IOException {
-
-        ResponseEntity<String> response = studentService.deleteStudentByStudentRegistrationNumber(1);
-
-        ObjectMapper mapper = new ObjectMapper();
-        ResponseBody responseBody = mapper.readValue(response.getBody(), ResponseBody.class);
-        Student student = mapper.convertValue(responseBody.getData(), Student.class);
-
-        assertTrue(response.getStatusCode().is4xxClientError());
-        assertTrue(responseBody.getMessage().equals("Student registration number doesn't exist"));
+        studentService.deleteStudentByStudentRegistrationNumber(1);
     }
 
     private Student mockStudent() {

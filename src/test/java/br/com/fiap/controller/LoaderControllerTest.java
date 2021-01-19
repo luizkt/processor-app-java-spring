@@ -1,5 +1,6 @@
 package br.com.fiap.controller;
 
+import br.com.fiap.entity.ApplicationResponseBody;
 import br.com.fiap.service.impl.LoaderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -48,8 +50,9 @@ public class LoaderControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
         String body = "{\"message\":\"Added all the students and transactions successfully\"}";
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        when(loaderService.loadFromCsv()).thenReturn(new ResponseEntity<String>(body, headers, HttpStatus.CREATED));
+        when(loaderService.loadFromCsv()).thenReturn(objectMapper.convertValue(body, ApplicationResponseBody.class));
 
         result = mockMvc.perform(MockMvcRequestBuilders.post("/loader/load_from_csv")
                 .contentType(MediaType.APPLICATION_JSON))
